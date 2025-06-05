@@ -258,7 +258,7 @@ Created comprehensive plan to enable development without Aladdin access:
 Created comprehensive mock data system that:
 1. **Auto-detects** when Aladdin credentials are missing
 2. **Provides realistic data** for all endpoints:
-   - Portfolio groups: PUBLICPRE, BIG6, DP-LB-USD, OPNIC (real names from user)
+   - Portfolio groups: ALPHA-CORE, INST-PRIME, DURATION-PRO, BALANCED-SELECT (generic names)
    - Securities: Mix of Treasuries, corporates, agencies, and high yield
    - Analytics: Including spread duration (key metric for min dispersion)
    - Positions and cash data
@@ -311,7 +311,7 @@ Created comprehensive mock data system that:
 
 8. **Mock data system**
    - Auto-detects missing Aladdin credentials
-   - Provides realistic portfolio groups (PUBLICPRE, BIG6, DP-LB-USD, OPNIC)
+   - Provides realistic portfolio groups (ALPHA-CORE, INST-PRIME, DURATION-PRO, BALANCED-SELECT)
    - Comprehensive security data with analytics
    - Spread duration included for min dispersion algorithm
    - Tested and working with all endpoints

@@ -123,7 +123,7 @@ def test_table_operations():
                 "quantity": 1000000
             },
             allocation_method="PRO_RATA",
-            portfolio_group_id="PUBLICPRE",
+            portfolio_group_id="ALPHA-CORE",
             parameters={"base_metric": "NAV"},
             constraints={"respect_cash": True, "min_allocation": 1000},
             created_by="test_user"

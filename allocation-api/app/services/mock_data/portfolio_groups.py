@@ -3,22 +3,22 @@
 from typing import Dict, List, Optional
 from .generator import MockDataGenerator
 
-# Real portfolio groups from the user
+# Mock portfolio groups with generic names
 MOCK_PORTFOLIO_GROUPS = [
     {
-        "ticker": "PUBLICPRE",
-        "name": "Public Funds Preferred",
-        "description": "Public sector preferred investment portfolio",
-        "strategy": "PREFERRED",
+        "ticker": "ALPHA-CORE",
+        "name": "Alpha Core Fixed Income",
+        "description": "Core fixed income investment portfolio",
+        "strategy": "CORE",
         "totalNav": 4500000000.00,
         "manager": "Sarah Johnson",
         "createdDate": "2022-03-15",
         "account_count": 12
     },
     {
-        "ticker": "BIG6",
-        "name": "Big Six Institutional",
-        "description": "Major institutional investor portfolio group",
+        "ticker": "INST-PRIME",
+        "name": "Institutional Prime",
+        "description": "Prime institutional investor portfolio group",
         "strategy": "CORE_PLUS",
         "totalNav": 8200000000.00,
         "manager": "Michael Chen",
@@ -26,9 +26,9 @@ MOCK_PORTFOLIO_GROUPS = [
         "account_count": 6
     },
     {
-        "ticker": "DP-LB-USD",
-        "name": "Defined Pension - Long Bond USD",
-        "description": "Defined benefit pension long duration bond portfolio",
+        "ticker": "DURATION-PRO",
+        "name": "Duration Professional",
+        "description": "Long duration professional bond portfolio",
         "strategy": "LDI",
         "totalNav": 12500000000.00,
         "manager": "Jennifer Martinez",
@@ -36,9 +36,9 @@ MOCK_PORTFOLIO_GROUPS = [
         "account_count": 11
     },
     {
-        "ticker": "OPNIC",
-        "name": "OPNIC Investment Portfolio",
-        "description": "OPNIC consolidated investment portfolio",
+        "ticker": "BALANCED-SELECT",
+        "name": "Balanced Select Portfolio",
+        "description": "Select balanced investment portfolio",
         "strategy": "BALANCED",
         "totalNav": 3100000000.00,
         "manager": "David Thompson",
@@ -50,11 +50,11 @@ MOCK_PORTFOLIO_GROUPS = [
 # Generate mock accounts for each portfolio group
 MOCK_ACCOUNTS = {}
 
-# PUBLICPRE accounts (12 public sector accounts)
-MOCK_ACCOUNTS["PUBLICPRE"] = [
+# ALPHA-CORE accounts (12 core fixed income accounts)
+MOCK_ACCOUNTS["ALPHA-CORE"] = [
     {
-        "memberTicker": f"PUB{str(i).zfill(3)}",
-        "memberName": f"Public Fund {i}",
+        "memberTicker": f"ALPHA{str(i).zfill(3)}",
+        "memberName": f"Alpha Account {i}",
         "nav": MockDataGenerator.generate_nav(100_000_000, 500_000_000),
         "cashAvailable": 0,  # Will be calculated based on NAV
         "strategy": "PREFERRED",
@@ -66,12 +66,12 @@ MOCK_ACCOUNTS["PUBLICPRE"] = [
     for i in range(1, 13)
 ]
 
-# BIG6 accounts (6 large institutional accounts)
-BIG6_NAMES = ["Alpha Capital", "Beta Investments", "Gamma Holdings", "Delta Partners", "Epsilon Fund", "Zeta Management"]
-MOCK_ACCOUNTS["BIG6"] = [
+# INST-PRIME accounts (6 large institutional accounts)
+INST_PRIME_NAMES = ["Prime Capital", "Elite Investments", "Premier Holdings", "Select Partners", "Strategic Fund", "Executive Management"]
+MOCK_ACCOUNTS["INST-PRIME"] = [
     {
-        "memberTicker": f"BIG{str(i).zfill(3)}",
-        "memberName": BIG6_NAMES[i-1],
+        "memberTicker": f"INST{str(i).zfill(3)}",
+        "memberName": INST_PRIME_NAMES[i-1],
         "nav": MockDataGenerator.generate_nav(800_000_000, 2_000_000_000),
         "cashAvailable": 0,
         "strategy": "CORE_PLUS",
@@ -83,11 +83,11 @@ MOCK_ACCOUNTS["BIG6"] = [
     for i in range(1, 7)
 ]
 
-# DP-LB-USD accounts (11 pension fund accounts)
-MOCK_ACCOUNTS["DP-LB-USD"] = [
+# DURATION-PRO accounts (11 duration-focused accounts)
+MOCK_ACCOUNTS["DURATION-PRO"] = [
     {
-        "memberTicker": f"DPL{str(i).zfill(3)}",
-        "memberName": f"Defined Pension Plan {i}",
+        "memberTicker": f"DUR{str(i).zfill(3)}",
+        "memberName": f"Duration Portfolio {i}",
         "nav": MockDataGenerator.generate_nav(200_000_000, 1_000_000_000),
         "cashAvailable": 0,
         "strategy": "LDI",
@@ -99,11 +99,11 @@ MOCK_ACCOUNTS["DP-LB-USD"] = [
     for i in range(1, 12)
 ]
 
-# OPNIC accounts (2 balanced portfolio accounts)
-MOCK_ACCOUNTS["OPNIC"] = [
+# BALANCED-SELECT accounts (2 balanced portfolio accounts)
+MOCK_ACCOUNTS["BALANCED-SELECT"] = [
     {
-        "memberTicker": f"OPN{str(i).zfill(3)}",
-        "memberName": f"OPNIC Account {i}",
+        "memberTicker": f"BAL{str(i).zfill(3)}",
+        "memberName": f"Balanced Account {i}",
         "nav": MockDataGenerator.generate_nav(150_000_000, 400_000_000),
         "cashAvailable": 0,
         "strategy": "BALANCED",
@@ -119,7 +119,7 @@ MOCK_ACCOUNTS["OPNIC"] = [
 for group_id, accounts in MOCK_ACCOUNTS.items():
     for account in accounts:
         # Conservative cash for pension funds, normal for others
-        conservative = group_id == "DP-LB-USD"
+        conservative = group_id == "DURATION-PRO"
         cash_pct = MockDataGenerator.generate_cash_percentage(conservative)
         account["cashAvailable"] = round(account["nav"] * cash_pct, -3)  # Round to nearest thousand
 

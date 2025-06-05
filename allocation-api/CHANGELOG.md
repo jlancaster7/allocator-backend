@@ -124,6 +124,29 @@ All notable changes to the Order Allocation API project.
 - pandas 2.0.3
 - structlog 23.1.0
 
+## [0.2.0] - 2025-06-05
+
+### Changed
+- Updated portfolio group names from specific client names to generic identifiers:
+  - PUBLICPRE → ALPHA-CORE
+  - BIG6 → INST-PRIME
+  - DP-LB-USD → DURATION-PRO
+  - OPNIC → BALANCED-SELECT
+- Updated all associated account prefixes to match new portfolio group names
+- Fixed API contract mismatch in portfolio-groups endpoint (id/name → group_id/group_name)
+- Fixed bond pricing from percentage to decimal format (98.75 → 0.98750)
+- Increased mock account cash percentages from 2-8% to 10-20% for better allocation coverage
+- Removed mock store logic in favor of real Snowflake database for allocation commits
+
+### Fixed
+- Allocation engine now properly handles bond prices instead of assuming $100
+- Allocation commit endpoint now uses real Snowflake database instead of returning 404
+- Portfolio group API response now matches frontend expectations
+
+### Added
+- Git repository initialization with proper .gitignore
+- Organized project structure with separate folders for API docs and technical documentation
+
 ## [Unreleased]
 
 ### To Do

@@ -85,7 +85,7 @@ backend/
 ### Mock Data Mode
 
 The system includes comprehensive mock data for development without Aladdin access:
-- Portfolio groups: PUBLICPRE, BIG6, DP-LB-USD, OPNIC
+- Portfolio groups: ALPHA-CORE, INST-PRIME, DURATION-PRO, BALANCED-SELECT
 - Securities with full analytics including spread duration
 - Account data with positions and cash
 
