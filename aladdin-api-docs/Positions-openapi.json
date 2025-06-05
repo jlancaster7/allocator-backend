@@ -1,0 +1,1000 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "\nRetrieves order-adjusted positions with notional cash offset for portfolios or portfolio groups. \n\n# Description\n\nA position represents the amount of an asset id held in a portfolio. The Positions API retrieves open positions for one or many given portfolios or portfolio groups for a specified position type.\n\n## Example Use Case\n\n  The Positions API could be used as an input to a client's bespoke portfolio modeling, analytics, or construction process off of Aladdin®.\n\n## Implementation Status\n\nThis API is production ready. For information on versioning, please see the [Developer Guide]. This API will be enhanced for pagination to support larger requests; currently all results will return on the first page with a maximum of 50,000 positions for a portfolio or portfolio group.\n\n  [Developer Guide]: apps/aladdin-developer-portal/#/guides/developer-guide\n",
+    "title": "Positions",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/position": {
+      "get": {
+        "description": "",
+        "operationId": "getPositions",
+        "parameters": [
+          {
+            "description": "Name of a portfolio or portfolio group. Multiple names can be given, separated by commas. Prefixing a portfolio group with a minus sign, e.g. `-TEST_FUNDS` will exclude that group from the results.",
+            "in": "query",
+            "name": "portGroup",
+            "required": true,
+            "example": "TST-TRD1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Which type of position the user is asking for. \n\n `EOD`: Yesterday's end-of-day positions. \n\n`SOD`: Corp. action adjusted start of day positions \n\n `SOD+Trades` : Corp. action adjusted start of day positions plus trades. \n\n`SOD+Trades+Orders`: Corp. action adjusted start of day positions plus trades and orders. Only orders with orderStatus `Open`,`Authorized`,`Active` and `Compl Pending` will show in positions.",
+            "in": "query",
+            "name": "posType",
+            "required": true,
+            "example": "EOD",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The Aladdin calendar to override the standard Empty calendar. Valid calendar names can be retrieved by making a Decodes API request to the MKT_CALENDARS",
+            "in": "query",
+            "name": "calendar",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "An ISO date field where the User can specify a today’s date (T) in their time zone to determine EOD/SOD date",
+            "in": "query",
+            "name": "calendarDate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, expressed as an ISO 8601/RFC3339 UTC date-time (YYYY-MM-DDThh:mm:ss.SSSZ) or an RFC7231 HTTP-date format (E, d M YYYY hh:mm:ss GMT)",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Positions response object if request is successful.",
+            "headers": {
+              "VND.com.blackrock.Request-ID": {
+                "description": "The unique identifier assigned by the client to the request that originated this response.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-ID": {
+                "description": "A Unique Identifier for this response",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-Timestamp": {
+                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PositionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Aladdin® will not process the request due to an apparent client error.",
+            "headers": {
+              "VND.com.blackrock.Request-ID": {
+                "description": "The unique identifier assigned by the client to the request that originated this response.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-ID": {
+                "description": "A Unique Identifier for this response",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-Timestamp": {
+                "description": "Timestamp assigned to this response, in “HTTP-date” format as defined by RFC 7231.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+            "headers": {
+              "VND.com.blackrock.Request-ID": {
+                "description": "The unique identifier assigned by the client to the request that originated this response.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-ID": {
+                "description": "A Unique Identifier for this response",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-Timestamp": {
+                "description": "Timestamp assigned to this response, in “HTTP-date” format as defined by RFC 7231.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Aladdin® understood the request but is refusing to authorize it.",
+            "headers": {
+              "VND.com.blackrock.Request-ID": {
+                "description": "The unique identifier assigned by the client to the request that originated this response.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-ID": {
+                "description": "A Unique Identifier for this response",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-Timestamp": {
+                "description": "Timestamp assigned to this response, in “HTTP-date” format as defined by RFC 7231.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+            "headers": {
+              "VND.com.blackrock.Request-ID": {
+                "description": "The unique identifier assigned by the client to the request that originated this response.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-ID": {
+                "description": "A Unique Identifier for this response",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              },
+              "VND.com.blackrock.Response-Timestamp": {
+                "description": "Timestamp assigned to this response, in “HTTP-date” format as defined by RFC 7231.",
+                "schema": {
+                  "type": "string",
+                  "format": "UUID"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve order-adjusted positions with notional cash offset",
+        "x-access-type": "READ",
+        "x-quota-limit": 500
+      }
+    }
+  },
+  "x-access-level": "Public",
+  "x-application-id": "18542",
+  "servers": [
+    {
+      "url": "https://lmginv.blackrock.com/api/portfolio-mgmt/positions/v1"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "ErrorCode": {
+        "description": "Defines an error that occurred.",
+        "properties": {
+          "code": {
+            "description": "A short mnenomic reference code for the error.",
+            "maxLength": 40,
+            "type": "string"
+          },
+          "message": {
+            "description": "A human readable description of the error.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "Position": {
+        "description": "Aladdin position data. Each entry is a map of position data.\n",
+        "properties": {
+          "@type": {
+            "default": "https://aladdin.io/model/portfolio-mgmt/positions/Positions.v1.json#/Position",
+            "description": "The schema describing this entity.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "accrualDays": {
+            "$ref": "#/components/schemas/accrualDays"
+          },
+          "accruedInterest": {
+            "$ref": "#/components/schemas/accruedInterest"
+          },
+          "alternateOas": {
+            "$ref": "#/components/schemas/alternateOas"
+          },
+          "assetId": {
+            "$ref": "#/components/schemas/assetId"
+          },
+          "baseCcy": {
+            "$ref": "#/components/schemas/baseCcy"
+          },
+          "cashComputed": {
+            "$ref": "#/components/schemas/cashComputed"
+          },
+          "ccy": {
+            "$ref": "#/components/schemas/ccy"
+          },
+          "countryRisk": {
+            "$ref": "#/components/schemas/countryRisk"
+          },
+          "cpn": {
+            "$ref": "#/components/schemas/cpn"
+          },
+          "curPar": {
+            "$ref": "#/components/schemas/curPar"
+          },
+          "currentFaceSOD": {
+            "$ref": "#/components/schemas/currentFaceSOD"
+          },
+          "dts": {
+            "$ref": "#/components/schemas/dts"
+          },
+          "factor": {
+            "$ref": "#/components/schemas/factor"
+          },
+          "factorDate": {
+            "$ref": "#/components/schemas/factorDate"
+          },
+          "gpStatus": {
+            "$ref": "#/components/schemas/gpStatus"
+          },
+          "inflationDuration": {
+            "$ref": "#/components/schemas/inflationDuration"
+          },
+          "invnum": {
+            "$ref": "#/components/schemas/invnum"
+          },
+          "isRateFlipped": {
+            "$ref": "#/components/schemas/isRateFlipped"
+          },
+          "isin": {
+            "$ref": "#/components/schemas/isin"
+          },
+          "issuerCountry": {
+            "$ref": "#/components/schemas/issuerCountry"
+          },
+          "issuerId": {
+            "$ref": "#/components/schemas/issuerId"
+          },
+          "issuerLongName": {
+            "$ref": "#/components/schemas/issuerLongName"
+          },
+          "issuerShortName": {
+            "$ref": "#/components/schemas/issuerShortName"
+          },
+          "issuerTicker": {
+            "$ref": "#/components/schemas/issuerTicker"
+          },
+          "krd10y": {
+            "$ref": "#/components/schemas/krd10y"
+          },
+          "krd15y": {
+            "$ref": "#/components/schemas/krd15y"
+          },
+          "krd1y": {
+            "$ref": "#/components/schemas/krd1y"
+          },
+          "krd20y": {
+            "$ref": "#/components/schemas/krd20y"
+          },
+          "krd25y": {
+            "$ref": "#/components/schemas/krd25y"
+          },
+          "krd2y": {
+            "$ref": "#/components/schemas/krd2y"
+          },
+          "krd30y": {
+            "$ref": "#/components/schemas/krd30y"
+          },
+          "krd3m": {
+            "$ref": "#/components/schemas/krd3m"
+          },
+          "krd3y": {
+            "$ref": "#/components/schemas/krd3y"
+          },
+          "krd40y": {
+            "$ref": "#/components/schemas/krd40y"
+          },
+          "krd50y": {
+            "$ref": "#/components/schemas/krd50y"
+          },
+          "krd5y": {
+            "$ref": "#/components/schemas/krd5y"
+          },
+          "krd7y": {
+            "$ref": "#/components/schemas/krd7y"
+          },
+          "localBaseFxRate": {
+            "$ref": "#/components/schemas/localBaseFxRate"
+          },
+          "market": {
+            "$ref": "#/components/schemas/market"
+          },
+          "marketRegion": {
+            "$ref": "#/components/schemas/marketRegion"
+          },
+          "maturity": {
+            "$ref": "#/components/schemas/maturity"
+          },
+          "minTradeIncrement": {
+            "$ref": "#/components/schemas/minTradeIncrement"
+          },
+          "minTradeSize": {
+            "$ref": "#/components/schemas/minTradeSize"
+          },
+          "mktValue": {
+            "$ref": "#/components/schemas/mktValue"
+          },
+          "mktValueSOD": {
+            "$ref": "#/components/schemas/mktValueSOD"
+          },
+          "modDur": {
+            "$ref": "#/components/schemas/modDur"
+          },
+          "modDurToWorst": {
+            "$ref": "#/components/schemas/modDurToWorst"
+          },
+          "notionalMktValue": {
+            "$ref": "#/components/schemas/notionalMktValue"
+          },
+          "notionalMktValueSOD": {
+            "$ref": "#/components/schemas/notionalMktValueSOD"
+          },
+          "oac": {
+            "$ref": "#/components/schemas/oac"
+          },
+          "oad": {
+            "$ref": "#/components/schemas/oad"
+          },
+          "oas": {
+            "$ref": "#/components/schemas/oas"
+          },
+          "orderId": {
+            "$ref": "#/components/schemas/orderId"
+          },
+          "orderStatus": {
+            "$ref": "#/components/schemas/orderStatus"
+          },
+          "parentCurrencySwapAssetId": {
+            "$ref": "#/components/schemas/parentCurrencySwapAssetId"
+          },
+          "portfolioNAV": {
+            "$ref": "#/components/schemas/portfolioNAV"
+          },
+          "portfolioNAVComputed": {
+            "$ref": "#/components/schemas/portfolioNAVComputed"
+          },
+          "portfolioNAVComputedNotional": {
+            "$ref": "#/components/schemas/portfolioNAVComputedNotional"
+          },
+          "portfolioName": {
+            "$ref": "#/components/schemas/portfolioTicker"
+          },
+          "posQuantity": {
+            "$ref": "#/components/schemas/posQuantity"
+          },
+          "posSource": {
+            "$ref": "#/components/schemas/posSourceOverride"
+          },
+          "price": {
+            "$ref": "#/components/schemas/price"
+          },
+          "priceAsPct": {
+            "$ref": "#/components/schemas/priceAsPct"
+          },
+          "priceAssetId": {
+            "$ref": "#/components/schemas/priceAssetId"
+          },
+          "priceDate": {
+            "$ref": "#/components/schemas/priceDate"
+          },
+          "priceDateSOD": {
+            "$ref": "#/components/schemas/priceDateSOD"
+          },
+          "priceIssue": {
+            "$ref": "#/components/schemas/priceIssue"
+          },
+          "pricePurpose": {
+            "$ref": "#/components/schemas/pricePurpose"
+          },
+          "pricePurposeSOD": {
+            "$ref": "#/components/schemas/pricePurposeSOD"
+          },
+          "priceSOD": {
+            "$ref": "#/components/schemas/priceSOD"
+          },
+          "priceSource": {
+            "$ref": "#/components/schemas/priceSource"
+          },
+          "priceSourceSOD": {
+            "$ref": "#/components/schemas/priceSourceSOD"
+          },
+          "putCallType": {
+            "$ref": "#/components/schemas/putCallType"
+          },
+          "qtySOD": {
+            "$ref": "#/components/schemas/qtySOD"
+          },
+          "referenceDate": {
+            "$ref": "#/components/schemas/referenceDate"
+          },
+          "riskSource": {
+            "$ref": "#/components/schemas/riskSource"
+          },
+          "secDesc1": {
+            "$ref": "#/components/schemas/secDesc1"
+          },
+          "secDesc2": {
+            "$ref": "#/components/schemas/secDesc2"
+          },
+          "secGroup": {
+            "$ref": "#/components/schemas/secGroup"
+          },
+          "secTicker": {
+            "$ref": "#/components/schemas/secTicker"
+          },
+          "secType": {
+            "$ref": "#/components/schemas/secType"
+          },
+          "sedol": {
+            "$ref": "#/components/schemas/sedol"
+          },
+          "spreadDur": {
+            "$ref": "#/components/schemas/spreadDur"
+          },
+          "strategyId": {
+            "$ref": "#/components/schemas/strategyId"
+          },
+          "strategyName": {
+            "$ref": "#/components/schemas/strategyName"
+          },
+          "tradeTranType": {
+            "$ref": "#/components/schemas/tradeTranType"
+          },
+          "ultimateIssuerLongName": {
+            "$ref": "#/components/schemas/ultimateIssuerLongName"
+          },
+          "ultimateIssuerShortName": {
+            "$ref": "#/components/schemas/ultimateIssuerShortName"
+          },
+          "ultimateIssuerTicker": {
+            "$ref": "#/components/schemas/ultimateIssuerTicker"
+          },
+          "ultimateParentIssuerId": {
+            "$ref": "#/components/schemas/ultimateParentIssuerId"
+          },
+          "wal": {
+            "$ref": "#/components/schemas/wal"
+          }
+        },
+        "type": "object"
+      },
+      "PositionResponse": {
+        "description": "Position response",
+        "items": {
+          "$ref": "#/components/schemas/Position"
+        },
+        "type": "array"
+      },
+      "accrualDays": {
+        "description": "Number of days accrued between the accrual start date and end date.",
+        "format": "int32",
+        "type": "integer"
+      },
+      "accruedInterest": {
+        "description": "Accrued interest is a date-sensitive attribute that factors into valuation. In general, the calculation is an interpolation of coupon values for the desired date between two coupon reset dates.",
+        "format": "double",
+        "type": "number"
+      },
+      "alternateOas": {
+        "description": "The Option Adjusted Spread of a security is quoted in basis points. It is the average spread of a security over its entire respective curve after factoring out the embedded option value. Alt (Alternative) OAS would utilize a different curve than the default curve used e.g., Libor vs Treasury.",
+        "format": "double",
+        "type": "number"
+      },
+      "assetId": {
+        "description": "Aladdin's unique ID for an asset. An asset ID may also be assigned to a portfolio or an index.",
+        "type": "string",
+        "x-nicknames": "asset_id, cusip"
+      },
+      "baseCcy": {
+        "description": "Base currency of the portfolio.",
+        "type": "string",
+        "x-nicknames": "base_currency"
+      },
+      "cashComputed": {
+        "description": "Computed cash",
+        "format": "double",
+        "type": "number"
+      },
+      "ccy": {
+        "description": "ISO code of the currency",
+        "type": "string"
+      },
+      "countryRisk": {
+        "description": "A subjective field that is meant to override the country field when the risk of the security differs from where it is issued. For example, a US branch of a Swiss bank would have the country as US, and the Risk Country as Switzerland, where the ultimate credit risk lies. If Risk Country is blank, this field will fall back to the Asset’s Country",
+        "type": "string"
+      },
+      "cpn": {
+        "description": "The coupon rate as of the indicated date - A bond's annual rate of interest, expressed as a percentage of the bond's face value.",
+        "format": "float",
+        "type": "number",
+        "x-nicknames": "coupon"
+      },
+      "curPar": {
+        "description": "Current (factored down) amount. For a trade, this is the trade quantity * factor. For a position,  this is held quantity * factor. If the opening position was partially closed, this is the remaining open position, factored down; e.g. open $10mm, close $1mm, and the current factor is 0.6; then the par is $5.4mm. Same positive/negative conventions as for quantity",
+        "format": "double",
+        "type": "number"
+      },
+      "currentFaceSOD": {
+        "description": "Face of the position after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "double",
+        "type": "number"
+      },
+      "dts": {
+        "description": "Duration x Spread",
+        "format": "double",
+        "type": "number"
+      },
+      "factor": {
+        "description": "Factor to calculate the remaining unpaid amount for mortgage pools, ABS, or other amortizing securities, or the factor for TIPS securities. For securities that have no such factor, Aladdin® by convention may assign a factor of 1",
+        "format": "double",
+        "type": "number"
+      },
+      "factorDate": {
+        "description": "As-of date of the factor. (YYYY-MM-DD)",
+        "format": "date",
+        "type": "string"
+      },
+      "gpStatus": {
+        "description": "Description of the Green Package status. Typically the status advances in this order: Scratch, Preliminary QC, and Published. The wording of this field is controlled by a decode",
+        "type": "string"
+      },
+      "inflationDuration": {
+        "description": "Sensitivity of an inflation-linked instrument's price to changes in inflation expectations. Calculated by shocking the inflation curve while holding nominal rates constant",
+        "format": "double",
+        "type": "number"
+      },
+      "invnum": {
+        "description": "This is the Investment Number or Invnum which appears on TradeEntry and AladdinView. It is provided as a convenience. Note that the unique ID for a trade is the tradeId.",
+        "type": "integer"
+      },
+      "isRateFlipped": {
+        "description": "true if rate is flipped, false otherwise",
+        "type": "boolean"
+      },
+      "isin": {
+        "description": "Asset ISIN identifier",
+        "type": "string"
+      },
+      "issuerCountry": {
+        "description": "Immediate issuer country",
+        "type": "string"
+      },
+      "issuerId": {
+        "description": "The (usually) 6-digit code that is assigned to a particular issuer of securities.",
+        "type": "string"
+      },
+      "issuerLongName": {
+        "description": "Long name of this issuer",
+        "type": "string"
+      },
+      "issuerShortName": {
+        "description": "Short name of this issuer",
+        "type": "string"
+      },
+      "issuerTicker": {
+        "description": "A short 'ticker' which this issuer was assigned in Aladdin. Where possible, this is the issuer's stock ticker, as Aladdin nominally follows Bloomberg on issuer ticker naming conventions.",
+        "type": "string"
+      },
+      "krd10y": {
+        "description": "krd10y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 10y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd15y": {
+        "description": "krd15y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 15y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd1y": {
+        "description": "krd1y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 1y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd20y": {
+        "description": "krd20y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 20y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd25y": {
+        "description": "krd25y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 25y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd2y": {
+        "description": "krd2y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 2y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd30y": {
+        "description": "krd30y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 30y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd3m": {
+        "description": "krd3m. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 3m.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd3y": {
+        "description": "krd3y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 3y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd40y": {
+        "description": "krd40y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 40y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd50y": {
+        "description": "krd50y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 50y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd5y": {
+        "description": "krd5y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 5y.",
+        "format": "double",
+        "type": "number"
+      },
+      "krd7y": {
+        "description": "krd7y. Key Rate Durations are calculated in the same way as effective duration. However, instead of shifting the entire yield curve parallel, only individual sections of the yield curve are shocked. The key point shocked on the yield curve here is 7y.",
+        "format": "double",
+        "type": "number"
+      },
+      "localBaseFxRate": {
+        "description": "This exchange rate field enables conversion of a holding's market value, which is stated in the portfolio base currency. To convert a market value (which is in base currency) to security currency, just multiply the market value by this field. This rate may not be expressed in market convention. Its expressed as 'n' where 'n' security currency = 1 base currency. For example, imagine a GBP security in a USD portfolio. And imagine the exchange rate is $1.30 per GBP. Then this field would contain 'n' where 'n' GPB = 1 USD, or 0.77. Note: if isRateFlipped is set to True for the record, the market value must be divided by the localBaseFxRate to arrive at the proper local market value",
+        "format": "float",
+        "type": "number"
+      },
+      "market": {
+        "description": "Market refers to the country of the security’s primary market of trading. Often times this value is the same as the country of issue, however this is not always the case. For equity derivatives, the market field should match that of the underlying.",
+        "type": "string"
+      },
+      "marketRegion": {
+        "description": "Refers to the over-arching region of the security’s market",
+        "type": "string"
+      },
+      "maturity": {
+        "description": "The end date of any security. For non-notional securities, this is the date on which the original principal amount becomes due and payable. Otherwise known as the \"legal final maturity.\" For perpetual securities, enter 12/31/2049 as the maturity (Aladdin convention). This field can also represent the end date of any credit enhancements.",
+        "format": "date",
+        "type": "string"
+      },
+      "minTradeIncrement": {
+        "description": "The smallest incremental trade amount after the minimum trade size has been met",
+        "format": "float",
+        "type": "number"
+      },
+      "minTradeSize": {
+        "description": "The smallest block of this security that can be traded",
+        "format": "float",
+        "type": "number"
+      },
+      "mktValue": {
+        "description": "Full market value of position, including all accrued interest up to date of report. [(Security Market Price/100) *Current Face Amount] + Accrued Interest",
+        "format": "float",
+        "type": "number"
+      },
+      "mktValueSOD": {
+        "description": "SOD market value of the position based on SOD price after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "double",
+        "type": "number"
+      },
+      "modDur": {
+        "description": "Modified Duration measures the price sensitivity of a bond when there is a change in the yield to maturity, it is a static analytic and optionality is not evaluated",
+        "format": "double",
+        "type": "number"
+      },
+      "modDurToWorst": {
+        "description": "Modified duration to worst. To-worst analytics is calculated for securities with optionality and is the worst of the to-maturity and to-call analytics. For non-callable securities, to-worst analytics match with to-maturity analytics",
+        "format": "double",
+        "type": "number"
+      },
+      "notionalMktValue": {
+        "description": "The notional market value of the instrument, for most securities is equivalent to the market value.  For swaps, futures, and other notional securities, this describes the notional market value all other calculations are based on. For options it is the delta of the option times the market value of the underlying. For futures, notional market value = number of contracts * face per contract * price/100. For swaps, notional market value = (100 + price) * notional amount of the swap. For options, notional market value = delta * market value of the underlying swap.",
+        "format": "float",
+        "type": "number"
+      },
+      "notionalMktValueSOD": {
+        "description": "SOD notional market value of the position based on SOD prices after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "double",
+        "type": "number"
+      },
+      "oac": {
+        "description": "Option adjusted convexity (OAC) is the 2nd order approximation of the price-rate relationship. It measures the sensitivity of price to parallel yield curve shifts unaccounted for by duration. The option-adjusted convexity may vary from negative to positive.",
+        "format": "double",
+        "type": "number"
+      },
+      "oad": {
+        "description": "Option Adjusted Duration (OAD) is the percentage change in the instrument’s price given 1% shift to interest rates. It measures the sensitivity of the market price to parallel shifts in the yield curve; assuming OAS stays constant as the curve shifts after adjusting for any embedded options.",
+        "format": "double",
+        "type": "number"
+      },
+      "oas": {
+        "description": "Option-Adjusted Spread (OAS) is the single spread that is added on top of the risk-free rate to equate a bond’s present value to the market price. OAS is typically a fixed income credit risk metric and is not relevant for futures, options, swaps, and other derivatives",
+        "format": "double",
+        "type": "number"
+      },
+      "orderId": {
+        "description": "On an order, this is Aladdin's unique ID for the order. On a related transaction (e.g. placement, trade, capital flow), this is the order which is related to that transaction",
+        "format": "int32",
+        "type": "integer"
+      },
+      "orderStatus": {
+        "description": "Aladdin® order status",
+        "type": "string",
+        "x-nicknames": "ord_status"
+      },
+      "parentCurrencySwapAssetId": {
+        "description": "Identifier of the parent asset associated with the Currency Swap leg position.",
+        "type": "string"
+      },
+      "portfolioNAV": {
+        "description": "End-of-day Portfolio Net Asset Value.This is the GP published nav.",
+        "format": "double",
+        "type": "number"
+      },
+      "portfolioNAVComputed": {
+        "description": "Intra-day NAV (considers type defining EOD/SOD etc).This is nav calculated by aggregating market value of all positions returned",
+        "format": "double",
+        "type": "number"
+      },
+      "portfolioNAVComputedNotional": {
+        "description": "Intra-day NAV (considers type defining EOD/SOD etc. Includes securities with notional market values.",
+        "format": "double",
+        "type": "number"
+      },
+      "portfolioTicker": {
+        "description": "A portfolio's unique short name also known as portfolio ticker",
+        "type": "string",
+        "x-nicknames": "aladdin_ticker"
+      },
+      "posQuantity": {
+        "description": "Original face amount of open position on a trade date basis. If the opening position was partially closed, this is the remaining open position. e.g. open $10mm, close $1mm, this is $9mm. Sign: Positive for long positions; negative for short positions. For securities which trade in contracts (e.g. options and futures), this is the number of contracts. For preferred, this is the number of shares. For TIPS, this is the unfactored face amount.",
+        "format": "float",
+        "type": "number"
+      },
+      "posSourceOverride": {
+        "description": "Source of the position, 'EOD' for EOD positions, 'CA' for Corporate Actions, 'ORD' for Orders, 'TRD' for Trades, 'CAPITAL' for Capital Flows",
+        "enum": [
+          "EOD",
+          "CA",
+          "TRD",
+          "ORD",
+          "CAPITAL"
+        ],
+        "type": "string"
+      },
+      "price": {
+        "description": "Market price of the security in the security local currency",
+        "format": "double",
+        "type": "number"
+      },
+      "priceAsPct": {
+        "description": "Flag indicating whether price is quoted as a percentage of face (bonds) or as a simple price (stocks) .",
+        "type": "string"
+      },
+      "priceAssetId": {
+        "description": "Asset id price",
+        "type": "string"
+      },
+      "priceDate": {
+        "description": "The date this price was marked. (YYYY-MM-DD)",
+        "format": "date",
+        "type": "string",
+        "x-nicknames": "date, markDate"
+      },
+      "priceDateSOD": {
+        "description": "SOD price date of the position based on SOD price data after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "date",
+        "type": "string"
+      },
+      "priceIssue": {
+        "description": "Issue price",
+        "format": "double",
+        "type": "number"
+      },
+      "pricePurpose": {
+        "description": "Purpose is used in pricing hierarchies to select the best price. Purpose is also part of the unique key for price records.",
+        "type": "string"
+      },
+      "pricePurposeSOD": {
+        "description": "SOD price purpose of the position based on SOD price data after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "type": "string"
+      },
+      "priceSOD": {
+        "description": "SOD price of position after taking corporate action adjustments into account. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "double",
+        "type": "number"
+      },
+      "priceSource": {
+        "description": "Source. A vendor may provide several types of prices for the same security and date. In that case, the source would be the vendor for all those prices and the purpose (akin to a price type) would be different for each type of price from that vendor.",
+        "type": "string",
+        "x-nicknames": "source"
+      },
+      "priceSourceSOD": {
+        "description": "SOD price source of the position based on SOD price data after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "type": "string"
+      },
+      "putCallType": {
+        "description": "This field indicates the type of embedded option of a security. From the Put/Call/Sink picklist on main panel in SecurityMaster. The PC_TYPES and LOAN_PC_TYPES decodes contain full list of short and long values. This field contains the short value, e.g. C, which means CALL in the decode, which means the issuer has the option to buy back the bond.",
+        "type": "string"
+      },
+      "qtySOD": {
+        "description": "SOD quantity of the position after corporate action adjustments. In Aladdin, we refer to corporate action-adjusted positions as SOD positions. We determine SOD by taking the EOD positions (T-1 positions) and layering on any corporate actions with trade date of T to arrive at the corporate action adjusted positions. SOD positions do not include non-corporate actions trades with trade date of T unless this is specifically requested in the API request",
+        "format": "double",
+        "type": "number"
+      },
+      "referenceDate": {
+        "description": "The Green Package reference date. The API always starts by finding the most recent Green Package that was run for this portfolio. If the most recent GP is a prior date (e.g. last Friday), then this field tells you the as-of date of that GP (last Friday), and the market prices and risk will be from that GP. The API then arrives at today's positions by applying trades whose trade date is after the GP date and on or before today. If the most recent GP is today, then this field will be today\"",
+        "format": "date",
+        "type": "string"
+      },
+      "riskSource": {
+        "description": "source",
+        "type": "string"
+      },
+      "secDesc1": {
+        "description": "Security description \"part 1\". This is the main description",
+        "type": "string",
+        "x-nicknames": "secDesc, sec_desc, desc_instmt, description"
+      },
+      "secDesc2": {
+        "description": "Security desciption \"part 2\". Some asset classes use this to provide other information about the security",
+        "type": "string"
+      },
+      "secGroup": {
+        "description": "The Aladdin® security group",
+        "type": "string"
+      },
+      "secTicker": {
+        "description": "Security ticker. For equities, this is the stock ticker. For CMOs/ABS and CMBS this represents a concatenation of deal and tranche. For municipal and corporate bonds, the ticker represents the standard issuer ticker. For FUTUREs, this contains the standard exchange ticker. Ticker allows users to quickly look up security information through external data providers.e.g., tickers should be provide for futures (TYH6), options on futures (TYH6C, TYH6P), equities (IBM), etc.",
+        "type": "string"
+      },
+      "secType": {
+        "description": "SEC_TYPE is a legacy tag. Most clients disregard SEC_TYPE since its components are available in the SM_SEC_GROUP and SM_SEC_TYPE tags.This is either the concatenation of Aladdin security group + '_' + Aladdin security type (e.g. security group of 'BND' and security type of 'AGENCY' becomes 'BND_AGENCY') or a result of the 'decoding' of that security group/security type, dependent on the client system's 'decode list' for SMD_SEC_TYPE.Example:  Aladdin Security group of 'BND' and Aladdin security type of 'AGENCY' becomes SEC_TYPE='BND_AGENCY' in the interface if there is no 'decode value' for this in the SMD_SEC_TYPE decode list.If there is a 'decode value' for this in the SMD_SEC_TYPE decode list (for example BND_AGENCY maps to 'ABOND'), then the 'decoded' value is sent (in this example, SEC_TYPE='ABOND' is sent.)",
+        "type": "string"
+      },
+      "sedol": {
+        "description": "Asset SEDOL identifier",
+        "type": "string"
+      },
+      "spreadDur": {
+        "description": "Spread Duration is the sensitivity of the bond’s market price with change in spreads.",
+        "format": "double",
+        "type": "number"
+      },
+      "strategyId": {
+        "description": "Aladdin® unique ID for a strategy",
+        "type": "integer"
+      },
+      "strategyName": {
+        "description": "Name of the strategy that is assigned to the allocation/trade. This strategy works as a grouping mechanism for orders. This strategy will determine how the new shares purchased or sold will be allocated across the various baskets.",
+        "type": "string"
+      },
+      "tradeTranType": {
+        "description": "The transaction type which appears in TradeEntry. Each valid tranType is a row in the TRANTYPES decode.",
+        "type": "string",
+        "x-nicknames": "tran_type"
+      },
+      "ultimateIssuerLongName": {
+        "description": "Ult issuer name",
+        "type": "string"
+      },
+      "ultimateIssuerShortName": {
+        "description": "Ult issuer short name",
+        "type": "string"
+      },
+      "ultimateIssuerTicker": {
+        "description": "Ult issuer ticker",
+        "type": "string"
+      },
+      "ultimateParentIssuerId": {
+        "description": "Aladdin® issuer ID of this issuer's highest-level parent.",
+        "type": "string",
+        "x-nicknames": "ultimate_parent_issuer_id"
+      },
+      "wal": {
+        "description": "The weighted average life (WAL) is the average length of time that each dollar of unpaid principal on a loan, or an amortizing bond remains outstanding.",
+        "format": "double",
+        "type": "number"
+      }
+    }
+  }
+}

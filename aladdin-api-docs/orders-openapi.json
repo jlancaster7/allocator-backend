@@ -1,0 +1,2417 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Filter, post or cancel orders. An order is a directive from a portfolio manager to the trading desk to execute a particular investment decision.",
+    "title": "Order",
+    "version": "1.0.0",
+    "x-aladdin-api-id": "agraph.trading.order_management.order.OrderAPI",
+    "x-aladdin-api-stability": "stable",
+    "x-aladdin-spec-id": "agraph.trading.order_management.order.v1.OrderAPI"
+  },
+  "paths": {
+    "/longrunningoperations/{id}": {
+      "get": {
+        "description": "API to poll for the results of a long running operation.",
+        "operationId": "OrderAPI_GetLongrunningOperation",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "description": "Id of the LongrunningOperation",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "x-aladdin-lro": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1LongrunningOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Get the long running operation results",
+        "x-access-type": "READ",
+        "x-quota-limit": 1000
+      }
+    },
+    "/order:cancel": {
+      "post": {
+        "description": "API to cancel a single aladdin order",
+        "operationId": "OrderAPI_CancelOrder",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1CancelOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1CancelOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Cancel a single aladdin order",
+        "x-access-type": "WRITE",
+        "x-quota-limit": 3000
+      }
+    },
+    "/order:post": {
+      "post": {
+        "description": "API to post new and/or update a single Aladdin order. Returns a SinglePostOrderResponse.",
+        "operationId": "OrderAPI_PostOrder",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1PostOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1SinglePostOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Post new and/or update a single Aladdin order.",
+        "x-access-type": "WRITE",
+        "x-quota-limit": 3000
+      }
+    },
+    "/orderIds:filter": {
+      "post": {
+        "description": "API to filter for the Aladdin order identifiers by order criteria as defined in the FilterOrderIdsRequest. This is a lightweight endpoint which allows for the retrieval of larger lists of order results.",
+        "operationId": "OrderAPI_FilterOrderIds",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1FilterOrderIdsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1FilterOrderIdsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Filter Aladdin order IDs",
+        "x-access-type": "READ",
+        "x-quota-limit": 500
+      }
+    },
+    "/orders:batchCancel": {
+      "post": {
+        "description": "API to cancel Aladdin orders. Returns a long-running operation to allow for the retrieval of a BatchCancelOrdersResponse when the operation completes.",
+        "operationId": "OrderAPI_BatchCancelOrders",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1BatchCancelOrdersRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "x-aladdin-lro": {
+              "meta-data-type": {
+                "description": "Meta data related to a BatchCancelOrdersResponse.",
+                "type": "object"
+              },
+              "response-type": {
+                "properties": {
+                  "results": {
+                    "items": {
+                      "$ref": "#/components/schemas/v1CancelOrderResult"
+                    },
+                    "title": "Cancelled order results",
+                    "type": "array"
+                  }
+                },
+                "title": "Response to batch cancel orders",
+                "type": "object"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1LongrunningOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Cancel Aladdin orders",
+        "x-access-type": "WRITE",
+        "x-quota-limit": 250
+      }
+    },
+    "/orders:batchPost": {
+      "post": {
+        "description": "API to post new and/or update Aladdin orders. Returns a long-running operation to allow for the retrieval of a BatchPostOrdersResponse when the operation completes.",
+        "operationId": "OrderAPI_BatchPostOrders",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1BatchPostOrdersRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "x-aladdin-lro": {
+              "meta-data-type": {
+                "description": "Meta data related to a BatchPostOrdersResponse.",
+                "type": "object"
+              },
+              "response-type": {
+                "properties": {
+                  "results": {
+                    "items": {
+                      "$ref": "#/components/schemas/v1PostOrderResult"
+                    },
+                    "title": "Order results",
+                    "type": "array"
+                  }
+                },
+                "title": "Response to batch post orders",
+                "type": "object"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1LongrunningOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Post new and/or update Aladdin orders",
+        "x-access-type": "WRITE",
+        "x-quota-limit": 250
+      }
+    },
+    "/orders:filter": {
+      "post": {
+        "description": "API to filter for the Aladdin orders by order criteria as defined in the FilterOrdersRequest.",
+        "operationId": "OrderAPI_FilterOrders",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1FilterOrdersRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1FilterOrdersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Filter Aladdin orders by order criteria",
+        "x-access-type": "READ",
+        "x-quota-limit": 500
+      }
+    }
+  },
+  "x-access-level": "Public",
+  "servers": [
+    {
+      "url": "https://lmginv.blackrock.com/api/trading/order-management/order/v1"
+    }
+  ],
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Aladdin® will not process the request due to an apparent client error.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Aladdin® understood the request but is refusing to authorize it.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Aladdin® is refusing to process the request because the client has exceeded the rate limit.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Any": {
+        "description": "`Any` contains an arbitrary serialized message along with a\nURL that describes the type of the serialized message",
+        "properties": {
+          "@type": {
+            "description": "A URL/resource name that uniquely identifies the type of the serialized message.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "commonenumsFinancingType": {
+        "default": "FINANCING_TYPE_UNSPECIFIED",
+        "description": "- FINANCING_TYPE_UNSPECIFIED: Unspecified\n - FINANCING_TYPE_PHYSICAL: Physical\n - FINANCING_TYPE_SYNTHETIC: Synthetic",
+        "enum": [
+          "FINANCING_TYPE_UNSPECIFIED",
+          "FINANCING_TYPE_PHYSICAL",
+          "FINANCING_TYPE_SYNTHETIC"
+        ],
+        "title": "Financing Type",
+        "type": "string"
+      },
+      "commonenumsOwnerType": {
+        "default": "OWNER_TYPE_UNSPECIFIED",
+        "description": "- OWNER_TYPE_UNSPECIFIED: Unspecified\n - OWNER_TYPE_TRADER: Trader\n - OWNER_TYPE_PM: PM\n - OWNER_TYPE_HYBRID: HYBRID",
+        "enum": [
+          "OWNER_TYPE_UNSPECIFIED",
+          "OWNER_TYPE_TRADER",
+          "OWNER_TYPE_PM",
+          "OWNER_TYPE_HYBRID"
+        ],
+        "title": "The Type of Owner",
+        "type": "string"
+      },
+      "compliancestateviolationv1Violation": {
+        "description": "Violation describes the intraday and overnight violation generated at time of the compliance breach.",
+        "properties": {
+          "actionStatus": {
+            "description": "The current action status of the violation. This will be populated with values such as Closed, Action Required, Action Taken.",
+            "required": [
+              "action_status"
+            ],
+            "type": "string"
+          },
+          "bqlFilter": {
+            "title": "bql filter expression of the rule being violated",
+            "type": "string"
+          },
+          "complDefId": {
+            "title": "the compl def id of the rule that is violated",
+            "type": "string"
+          },
+          "compliancePurpose": {
+            "title": "Compliance purpose of the rule being evaluated",
+            "type": "string"
+          },
+          "complianceSeverity": {
+            "$ref": "#/components/schemas/enumsComplianceSeverity"
+          },
+          "creationTime": {
+            "description": "This records the latest timestamp when the item is entered or updated.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "icid": {
+            "title": "the investment constraint id of the violation",
+            "type": "string"
+          },
+          "id": {
+            "description": "unique Violation Id.",
+            "type": "string"
+          },
+          "lastModifiedTime": {
+            "description": "The last time when violations was updated.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "logId": {
+            "title": "the log id of the violation:",
+            "type": "string"
+          },
+          "modifier": {
+            "description": "The user who last modified the violation.",
+            "type": "string"
+          },
+          "offender": {
+            "description": "The offender of the violation, e.g. the Issuer, Security, Country or Currency etcetera that is in violation of the rule.",
+            "type": "string"
+          },
+          "portfolioId": {
+            "description": "Aladdin unique numeric portfolio id, e.g. -1123.",
+            "type": "string"
+          },
+          "program": {
+            "title": "Compliance engine that evaluated this violation",
+            "type": "string"
+          },
+          "resolutionComment": {
+            "description": "The current resolution comment for the violation which has been populated by a user.",
+            "type": "string"
+          },
+          "ruleAssignmentName": {
+            "description": "Name given to a mapping (assignment) between a compliance rule and a portfolio in Aladdin.",
+            "type": "string"
+          },
+          "ruleId": {
+            "description": "A unique name for a rule which is violated.",
+            "type": "string"
+          },
+          "violationContributions": {
+            "description": "One or more allocations which contributed to the violation. Each violation is caused by one or more underlying positions.",
+            "items": {
+              "$ref": "#/components/schemas/v1ViolationContribution"
+            },
+            "type": "array"
+          },
+          "violationDate": {
+            "description": "The date when this violation occurred.",
+            "format": "date",
+            "type": "string"
+          },
+          "violationDescription": {
+            "description": "The description of the violation.",
+            "type": "string"
+          },
+          "violationDetail": {
+            "description": "The detail of a violation. This will include any transactions or positions that are part of the violation.",
+            "type": "string"
+          },
+          "violationDisposition": {
+            "description": "The current  disposition of the violation. This will be populated for closed violations and include values such as Approved, Rejected, Manual etc.",
+            "type": "string"
+          },
+          "violationOwner": {
+            "description": "The current team or group who owns the next step in resolving this violation.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actionStatus"
+        ],
+        "type": "object"
+      },
+      "enumsAssignedToStatus": {
+        "default": "ASSIGNED_TO_STATUS_UNSPECIFIED",
+        "description": "- ASSIGNED_TO_STATUS_UNSPECIFIED: Unspecified\n - ASSIGNED_TO_STATUS_REQUEST_CLOSE: Request Close\n - ASSIGNED_TO_STATUS_REQUEST_RETURN: Request Return\n - ASSIGNED_TO_STATUS_REQUEST_HOLD: Request Hold\n - ASSIGNED_TO_STATUS_REQUEST_REMOVE_HOLD: Request Remove hold\n - ASSIGNED_TO_STATUS_RETURNED: Returned\n - ASSIGNED_TO_STATUS_REASSIGNED: Reassigned\n - ASSIGNED_TO_STATUS_REQUEST_REJECT: Request reject\n - ASSIGNED_TO_STATUS_REQUEST_LIMIT_CHANGE: Request Limit Change\n - ASSIGNED_TO_STATUS_ACCEPTED: Accepted\n - ASSIGNED_TO_STATUS_HOLD: HOLD\n - ASSIGNED_TO_STATUS_DNT: DO NOT TRADE\n - ASSIGNED_TO_STATUS_REJECT: REJECT",
+        "enum": [
+          "ASSIGNED_TO_STATUS_UNSPECIFIED",
+          "ASSIGNED_TO_STATUS_REQUEST_CLOSE",
+          "ASSIGNED_TO_STATUS_REQUEST_RETURN",
+          "ASSIGNED_TO_STATUS_REQUEST_HOLD",
+          "ASSIGNED_TO_STATUS_REQUEST_REMOVE_HOLD",
+          "ASSIGNED_TO_STATUS_RETURNED",
+          "ASSIGNED_TO_STATUS_REASSIGNED",
+          "ASSIGNED_TO_STATUS_REQUEST_REJECT",
+          "ASSIGNED_TO_STATUS_REQUEST_LIMIT_CHANGE",
+          "ASSIGNED_TO_STATUS_ACCEPTED",
+          "ASSIGNED_TO_STATUS_HOLD",
+          "ASSIGNED_TO_STATUS_DNT",
+          "ASSIGNED_TO_STATUS_REJECT"
+        ],
+        "title": "Assigned to Status",
+        "type": "string"
+      },
+      "enumsCompliancePositionSource": {
+        "default": "COMPLIANCE_POSITION_SOURCE_UNSPECIFIED",
+        "description": "- COMPLIANCE_POSITION_SOURCE_UNSPECIFIED: Unspecified position source\n - COMPLIANCE_POSITION_SOURCE_ORDER: The position source is order\n - COMPLIANCE_POSITION_SOURCE_TRADE: The position source is trade\n - COMPLIANCE_POSITION_SOURCE_POSITION: The position source is position\n - COMPLIANCE_POSITION_SOURCE_NEW_CASH: The position source is new cash\n - COMPLIANCE_POSITION_SOURCE_MISC_CASH: The position source is misc cash\n - COMPLIANCE_POSITION_SOURCE_COMMITTED_CASH: The position source is committed cash",
+        "enum": [
+          "COMPLIANCE_POSITION_SOURCE_UNSPECIFIED",
+          "COMPLIANCE_POSITION_SOURCE_ORDER",
+          "COMPLIANCE_POSITION_SOURCE_TRADE",
+          "COMPLIANCE_POSITION_SOURCE_POSITION",
+          "COMPLIANCE_POSITION_SOURCE_NEW_CASH",
+          "COMPLIANCE_POSITION_SOURCE_MISC_CASH",
+          "COMPLIANCE_POSITION_SOURCE_COMMITTED_CASH"
+        ],
+        "title": "Enumeration of position source for compliance transactions",
+        "type": "string"
+      },
+      "enumsComplianceSeverity": {
+        "default": "COMPLIANCE_SEVERITY_UNSPECIFIED",
+        "description": "- COMPLIANCE_SEVERITY_UNSPECIFIED: Reserved Value\n - COMPLIANCE_SEVERITY_WARNING: The severity is warning\n - COMPLIANCE_SEVERITY_RESTRICTION: The severity is restriction\n - COMPLIANCE_SEVERITY_SILENT_ALARM: The severity is silent alarm.\n - COMPLIANCE_SEVERITY_SECURITY_LANDING: The severity is security landing.\n - COMPLIANCE_SEVERITY_TIMING_ISSUE: The severity is timing issue.\n - COMPLIANCE_SEVERITY_GAIN_LOSS_SENSITIVE: The severity is Gain/Loss sensitive.",
+        "enum": [
+          "COMPLIANCE_SEVERITY_UNSPECIFIED",
+          "COMPLIANCE_SEVERITY_WARNING",
+          "COMPLIANCE_SEVERITY_RESTRICTION",
+          "COMPLIANCE_SEVERITY_SILENT_ALARM",
+          "COMPLIANCE_SEVERITY_SECURITY_LANDING",
+          "COMPLIANCE_SEVERITY_TIMING_ISSUE",
+          "COMPLIANCE_SEVERITY_GAIN_LOSS_SENSITIVE"
+        ],
+        "title": "Enumeration of possible severity",
+        "type": "string"
+      },
+      "enumsOrderReservationStatus": {
+        "default": "ORDER_RESERVATION_STATUS_UNSPECIFIED",
+        "description": "- ORDER_RESERVATION_STATUS_UNSPECIFIED: Unspecified\n - ORDER_RESERVATION_STATUS_PENDING: Code I\n - ORDER_RESERVATION_STATUS_ACKNOWLEDGE: Code S\n - ORDER_RESERVATION_STATUS_RESERVED: Code R\n - ORDER_RESERVATION_STATUS_UNAVAILABLE: Code U\n - ORDER_RESERVATION_STATUS_AVAILABLE: Code A\n - ORDER_RESERVATION_STATUS_ERROR: Code E\n - ORDER_RESERVATION_STATUS_CANCELLED: Code C\n - ORDER_RESERVATION_STATUS_EXPIRED: Code X\n - ORDER_RESERVATION_STATUS_PLACEHOLDER: Code P",
+        "enum": [
+          "ORDER_RESERVATION_STATUS_UNSPECIFIED",
+          "ORDER_RESERVATION_STATUS_PENDING",
+          "ORDER_RESERVATION_STATUS_ACKNOWLEDGE",
+          "ORDER_RESERVATION_STATUS_RESERVED",
+          "ORDER_RESERVATION_STATUS_UNAVAILABLE",
+          "ORDER_RESERVATION_STATUS_AVAILABLE",
+          "ORDER_RESERVATION_STATUS_ERROR",
+          "ORDER_RESERVATION_STATUS_CANCELLED",
+          "ORDER_RESERVATION_STATUS_EXPIRED",
+          "ORDER_RESERVATION_STATUS_PLACEHOLDER"
+        ],
+        "title": "Order Reservation Status",
+        "type": "string"
+      },
+      "enumsOrderReservationType": {
+        "default": "ORDER_RESERVATION_TYPE_UNSPECIFIED",
+        "description": "- ORDER_RESERVATION_TYPE_UNSPECIFIED: Unspecified\n - ORDER_RESERVATION_TYPE_CREDIT: Code C\n - ORDER_RESERVATION_TYPE_LOCATE: Code L",
+        "enum": [
+          "ORDER_RESERVATION_TYPE_UNSPECIFIED",
+          "ORDER_RESERVATION_TYPE_CREDIT",
+          "ORDER_RESERVATION_TYPE_LOCATE"
+        ],
+        "title": "Order Reservation Type",
+        "type": "string"
+      },
+      "googlerpcStatus": {
+        "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors).",
+        "properties": {
+          "code": {
+            "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].",
+            "format": "int32",
+            "type": "integer"
+          },
+          "details": {
+            "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use.",
+            "items": {
+              "$ref": "#/components/schemas/Any"
+            },
+            "type": "array"
+          },
+          "message": {
+            "description": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\n[google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "order_managementorderv1BatchPostOrdersMetaData": {
+        "description": "Meta data related to a BatchPostOrdersResponse.",
+        "type": "object"
+      },
+      "order_managementorderv1BatchPostOrdersResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/v1PostOrderResult"
+            },
+            "title": "Order results",
+            "type": "array"
+          }
+        },
+        "title": "Response to batch post orders",
+        "type": "object"
+      },
+      "order_managementorderv1ExternalOrderReference": {
+        "properties": {
+          "accountCode": {
+            "description": "Aladdin's unique account code/ID for an organization or system (e.g. an external broker or counterparty). Also known as \"org_id\" to some legacy systems.",
+            "format": "int64",
+            "type": "string"
+          },
+          "externalId1": {
+            "description": "First external order number. A limit of 64 characters is applied.",
+            "type": "string"
+          },
+          "externalId2": {
+            "description": "Second external order number. A limit of 64 characters is applied.",
+            "type": "string"
+          }
+        },
+        "title": "External Order Info",
+        "type": "object"
+      },
+      "order_managementorderv1OrderComment": {
+        "properties": {
+          "orderCommentKey": {
+            "description": "Comment name. Examples: \"General\", \"Instructions\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "orderCommentValue": {
+            "title": "Comment value",
+            "type": "string"
+          }
+        },
+        "title": "Order Comment",
+        "type": "object"
+      },
+      "order_managementorderv1OrderQuery": {
+        "properties": {
+          "basketIdCriterion": {
+            "$ref": "#/components/schemas/orderv1BasketIdCriterion"
+          },
+          "dealingCapacityCriterion": {
+            "$ref": "#/components/schemas/v1DealingCapacityCriterion"
+          },
+          "externalIdCriterion": {
+            "$ref": "#/components/schemas/v1ExternalIdCriterion"
+          },
+          "externalIdListCriterion": {
+            "$ref": "#/components/schemas/v1ExternalIdListCriterion"
+          },
+          "orderIdCriterion": {
+            "$ref": "#/components/schemas/v1OrderIdsCriterion"
+          },
+          "portfolioGroupCriterion": {
+            "$ref": "#/components/schemas/v1PortfolioGroupCriterion"
+          },
+          "portfolioModifiedTimeCriterion": {
+            "$ref": "#/components/schemas/v1PortfolioModifiedTimeCriterion"
+          },
+          "retrieveOrderReservations": {
+            "description": "This flag determines whether to pull order locate / FCM details. If set to true, locate / FCM details will be returned within the reservations node of the orderDetails section.",
+            "type": "boolean"
+          }
+        },
+        "title": "Query to filter orders on",
+        "type": "object"
+      },
+      "order_managementorderv1PostOrderConfig": {
+        "properties": {
+          "accountCode": {
+            "description": "Aladdin's unique account code/ID for an organization or system (e.g. an external broker or counterparty). Also known as \"org_id\" to some legacy systems.\nUsed for linking to the external portfolio details.",
+            "format": "int64",
+            "type": "string"
+          },
+          "complianceTimeout": {
+            "description": "Timeout for running compliance, specified in seconds (example format: \"10s\"). The timer is set on the compliance run during order posting. If the non-zero time is reached and the run is not complete,\norders will be posted with the \"Compl Pending\" status set regardless of any violations that may have resulted if the run was successful. Default is infinite if not specified or if the value is 0s / negative.",
+            "type": "string"
+          },
+          "externalEntityType": {
+            "description": "External entity type like CUST - custodian, FUTR - futures agent. ADMN - administrator, etc., as per the EXTENT_TYPES decodes.\nUsed for linking to the external portfolio details.",
+            "type": "string"
+          },
+          "runCompliance": {
+            "description": "Default is true to run compliance on this post order request.",
+            "type": "boolean"
+          },
+          "whatIf": {
+            "required": [
+              "what_if"
+            ],
+            "title": "True to post orders in a what-if mode",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "whatIf"
+        ],
+        "title": "Post order config",
+        "type": "object"
+      },
+      "orderv1BasketIdCriterion": {
+        "description": "A criterion to filter orders by basket IDs. Users must input at least one Basket ID, along with either an order date or the portfolio/status option, but not both.\nUsers should be aware that an order basket can spread across multiple portfolios, only the orders for the specified portfolio IDs will be returned when using the portfolio ID parameter.",
+        "properties": {
+          "basketIds": {
+            "description": "Basket IDs associated with the orders. This is a required field and at least one non-empty basket ID should be specified.",
+            "items": {
+              "type": "string"
+            },
+            "required": [
+              "basket_ids"
+            ],
+            "type": "array"
+          },
+          "orderDate": {
+            "format": "date",
+            "title": "Open date for the order",
+            "type": "string"
+          },
+          "portStatusOption": {
+            "$ref": "#/components/schemas/v1PortfolioAndOrderStatusFilterOption"
+          },
+          "showTraderOrders": {
+            "description": "True to show trader orders. Otherwise, PM orders are shown by default. Note that hybrid orders are always returned (i.e. without the owner type assignment).",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basketIds"
+        ],
+        "type": "object"
+      },
+      "orderv1OrderFlag": {
+        "description": "OrderFlag. Please refer to BQL ord_flags.",
+        "properties": {
+          "flagKey": {
+            "title": "OrderFlag name - both the description and the value3 of the BQL mapping are accepted. Accepted Inputs: DELIVER_FREE, Deliver Free, HAIRCUT_ON_CASH, Haircut on cash, SHORT_SELL, Short Sell, UNWIND_VIA_NET_PAYMENT, Unwind via Net Payment, RIGHT_OF_SUB, Right of sub, RIGHT_OF_EXIT, Right of exit",
+            "type": "string"
+          },
+          "flagValue": {
+            "title": "OrderFlag value - Value1 of the BQL mapping. Accepted Inputs: FOP, HOC, SHO, UNP, ROS, ROE",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "referencesportfolioPortfolioReference": {
+        "description": "Reference to a portfolio. this include the portfolio id and the portfolio\nticker. Both are returned for `read` but only one of them is required for a\n`write`. If both are provided for a `write` then portfolio id takes\nprecedence.",
+        "properties": {
+          "portfolioId": {
+            "title": "portfolio id",
+            "type": "string"
+          },
+          "portfolioTicker": {
+            "title": "portfolio ticker",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1BatchCancelOrdersMetaData": {
+        "description": "Meta data related to a BatchCancelOrdersResponse.",
+        "type": "object"
+      },
+      "v1BatchCancelOrdersRequest": {
+        "properties": {
+          "requests": {
+            "description": "List of cancel order request details. At least one request must be specified. Maximum allowed is 500.",
+            "items": {
+              "$ref": "#/components/schemas/v1CancelOrderRequest"
+            },
+            "required": [
+              "requests"
+            ],
+            "type": "array"
+          }
+        },
+        "required": [
+          "requests"
+        ],
+        "title": "Request message to batch cancel orders",
+        "type": "object"
+      },
+      "v1BatchCancelOrdersResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/v1CancelOrderResult"
+            },
+            "title": "Cancelled order results",
+            "type": "array"
+          }
+        },
+        "title": "Response to batch cancel orders",
+        "type": "object"
+      },
+      "v1BatchPostOrdersRequest": {
+        "properties": {
+          "orders": {
+            "description": "Orders to create or update. At least one order must be specified. Maximum allowed is 1000. Users are advised to use small batch sizes and increase parallelism for performance.",
+            "items": {
+              "$ref": "#/components/schemas/v1Order"
+            },
+            "required": [
+              "orders"
+            ],
+            "type": "array"
+          },
+          "postOrderConfig": {
+            "$ref": "#/components/schemas/order_managementorderv1PostOrderConfig"
+          }
+        },
+        "required": [
+          "orders"
+        ],
+        "title": "Request message to create and/or update Aladdin orders",
+        "type": "object"
+      },
+      "v1CancelExternalOrderReference": {
+        "properties": {
+          "accountCode": {
+            "description": "Aladdin's unique account code/ID for an organization or system (e.g. an external broker or counterparty). Also known as \"org_id\" to some legacy systems.",
+            "format": "int64",
+            "required": [
+              "account_code"
+            ],
+            "type": "string"
+          },
+          "externalId1": {
+            "required": [
+              "external_id1"
+            ],
+            "title": "First external order number",
+            "type": "string"
+          }
+        },
+        "required": [
+          "externalId1",
+          "accountCode"
+        ],
+        "title": "External Order reference information",
+        "type": "object"
+      },
+      "v1CancelOrderRequest": {
+        "properties": {
+          "externalReference": {
+            "$ref": "#/components/schemas/v1CancelExternalOrderReference"
+          },
+          "orderComments": {
+            "items": {
+              "$ref": "#/components/schemas/order_managementorderv1OrderComment"
+            },
+            "title": "Associated comments for this order cancelling change",
+            "type": "array"
+          },
+          "orderId": {
+            "title": "Id of the order to cancel",
+            "type": "string"
+          }
+        },
+        "title": "Request detail to cancel a single order",
+        "type": "object"
+      },
+      "v1CancelOrderResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/v1CancelOrderResult"
+            },
+            "title": "Cancelled order results",
+            "type": "array"
+          }
+        },
+        "title": "Response to single cancel order request",
+        "type": "object"
+      },
+      "v1CancelOrderResult": {
+        "description": "Result of cancelling an order as part of a batch operation.",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/googlerpcStatus"
+          },
+          "output": {
+            "$ref": "#/components/schemas/v1Order"
+          }
+        },
+        "type": "object"
+      },
+      "v1ClientIdReference": {
+        "description": "The client ID reference used for resolving assets via a security reference type that is not in the regular types as defined in OrderAssetReference.",
+        "properties": {
+          "aliasCode": {
+            "description": "Code of the organisation or account where the identifier is assigned from. Please refer to Aladdin Support for the list of valid codes.",
+            "format": "int64",
+            "type": "string"
+          },
+          "aliasPurpose": {
+            "description": "The purpose field is an additional tag to the alias code for mapping this ID reference. Please refer to Aladdin Support for the list of associated values.",
+            "type": "string"
+          },
+          "clientId": {
+            "title": "The security identifier in this client ID type",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1DealingCapacityCriterion": {
+        "description": "A criterion used to filter orders by dealing capacities, order statuses, and order date.",
+        "properties": {
+          "dealingCapacities": {
+            "description": "Specify a list of dealing capacities to filter orders by.  \nA minimum of one dealing capacity must be specified.\nBoth CDE and DECDE values are accepted.\nPlease reference the Aladdin Decode table 'EXECUTION_TYPES' for the list of all dealing capacities.",
+            "items": {
+              "type": "string"
+            },
+            "required": [
+              "dealing_capacities"
+            ],
+            "type": "array"
+          },
+          "orderEndDate": {
+            "description": "The ending order date to filter by.  When omitted, the default value is the current date.",
+            "format": "date",
+            "type": "string"
+          },
+          "orderStartDate": {
+            "description": "The starting order date to filter by. It must be before or equal to the order end date, and cannot be more than 1 day\nbefore the order end date.",
+            "format": "date",
+            "required": [
+              "order_start_date"
+            ],
+            "type": "string"
+          },
+          "orderStatuses": {
+            "description": "Specify a list of Aladdin order statuses to filter orders by.\nNote only live order statuses are currently supported: \"Open\", \"Compl Pending\", \"Authorized\", and \"Active\".\nIf no status is specified, all live orders will be included in the response. Both CDE and DECDE values are accepted as well.\nPlease reference the Aladdin Decode table 'ORDER_STATUS' for the list of all order statuses (live and completed) in Aladdin.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "dealingCapacities",
+          "orderStartDate"
+        ],
+        "type": "object"
+      },
+      "v1ExternalIdCriterion": {
+        "properties": {
+          "accountCode": {
+            "description": "Aladdin's unique account code/ID for an organization or system (e.g. external broker / counterparty). Also known as \"org_id\" to some legacy systems.",
+            "format": "int64",
+            "required": [
+              "account_code"
+            ],
+            "type": "string"
+          },
+          "externalId1": {
+            "description": "External system's trade identifier. Maps to Order.external_id1.",
+            "required": [
+              "external_id1"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "externalId1",
+          "accountCode"
+        ],
+        "title": "A criterion to filter by external system trade identifier",
+        "type": "object"
+      },
+      "v1ExternalIdListCriterion": {
+        "properties": {
+          "externalIdsGroups": {
+            "description": "External system's trade identifier groups. Maps to Order.external_id1. The combined maximum number of external identifiers allowed is 10000.",
+            "items": {
+              "$ref": "#/components/schemas/v1ExternalIdsGroup"
+            },
+            "required": [
+              "external_ids_groups"
+            ],
+            "type": "array"
+          }
+        },
+        "required": [
+          "externalIdsGroups"
+        ],
+        "title": "A criterion to filter by multiple external system trade identifiers",
+        "type": "object"
+      },
+      "v1ExternalIdsGroup": {
+        "description": "Group containing a list of external system's trade identifiers and the associated Aladdin's account code/ID.",
+        "properties": {
+          "accountCode": {
+            "description": "Aladdin's unique account code/ID for an organization or system (e.g. external broker / counterparty). Also known as \"org_id\" to some legacy systems.",
+            "format": "int64",
+            "required": [
+              "account_code"
+            ],
+            "type": "string"
+          },
+          "externalId1s": {
+            "description": "List of external system's trade identifiers. Maps to Order.external_id1. At least one identifier must be specified. Maximum allowed is 10000.",
+            "items": {
+              "type": "string"
+            },
+            "required": [
+              "external_id1s"
+            ],
+            "type": "array"
+          }
+        },
+        "required": [
+          "externalId1s",
+          "accountCode"
+        ],
+        "type": "object"
+      },
+      "v1FilterOrderIdsRequest": {
+        "description": "Filter order identifiers by order ID query criteria.",
+        "properties": {
+          "pageSize": {
+            "description": "The maximum number of results desired to be returned by the API in a single page of data. If this value exceeds the maximum supported for the operation or there are fewer data results than this value, a smaller number of results will be returned.\nThe maximum value is 20000. If unspecified or out of range, the default value of 20000 is used.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "pageToken": {
+            "description": "A page token, received from a previous 'FilterOrderIds' call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to 'FilterOrderIds' must match the call that provided the page token.\nExclude this field or leave empty for new filter requests.",
+            "type": "string"
+          },
+          "query": {
+            "$ref": "#/components/schemas/v1OrderIdQuery"
+          }
+        },
+        "type": "object"
+      },
+      "v1FilterOrderIdsResponse": {
+        "properties": {
+          "nextPageToken": {
+            "description": "A token, which can be sent as 'pageToken' to retrieve the next page.\nIf this field is omitted, there are no subsequent pages.",
+            "type": "string"
+          },
+          "orderIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Order ID results. A maximum of 20000 order IDs will be returned",
+            "type": "array"
+          },
+          "status": {
+            "title": "A message that contains information about how many results in the returned page could not be found and how many were hidden due to permissions issues",
+            "type": "string"
+          }
+        },
+        "title": "Response message containing the filtered order identifier results",
+        "type": "object"
+      },
+      "v1FilterOrdersRequest": {
+        "description": "Filter orders by order query criteria.",
+        "properties": {
+          "pageSize": {
+            "description": "The maximum number of results desired to be returned by the API in a single page of data. If this value exceeds the maximum supported for the operation or there are fewer data results than this value, a smaller number of results will be returned.\nThe maximum value is 4000. If unspecified or out of range, the default value of 4000 is used.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "pageToken": {
+            "description": "A page token, received from a previous 'FilterOrders' call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to 'FilterOrders' must match the call that provided the page token.\nExclude this field or leave empty for new filter requests.",
+            "type": "string"
+          },
+          "query": {
+            "$ref": "#/components/schemas/order_managementorderv1OrderQuery"
+          }
+        },
+        "type": "object"
+      },
+      "v1FilterOrdersResponse": {
+        "properties": {
+          "nextPageToken": {
+            "description": "A token, which can be sent as 'pageToken' to retrieve the next page.\nIf this field is omitted, there are no subsequent pages.",
+            "type": "string"
+          },
+          "orders": {
+            "items": {
+              "$ref": "#/components/schemas/v1Order"
+            },
+            "title": "Order results. A maximum of 4000 orders will be returned",
+            "type": "array"
+          },
+          "status": {
+            "title": "A message that contains information about how many results in the returned page could not be found and how many were hidden due to permissions issues",
+            "type": "string"
+          }
+        },
+        "title": "Response message containing the filtered order results",
+        "type": "object"
+      },
+      "v1LongrunningOperation": {
+        "description": "LongrunningOperation represents a long-running operation that is the result\nof a network API call.",
+        "properties": {
+          "done": {
+            "description": "If the value is `false`, it means the operation is still in progress.\nIf true, the operation is completed, and either `error` or `response` is\navailable.",
+            "type": "boolean"
+          },
+          "error": {
+            "$ref": "#/components/schemas/googlerpcStatus"
+          },
+          "id": {
+            "description": "The server-assigned id, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`id` should have the format of `operations/some/unique/id`.",
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Any"
+          },
+          "response": {
+            "$ref": "#/components/schemas/Any"
+          }
+        },
+        "type": "object"
+      },
+      "v1ModifiedTimeRange": {
+        "description": "A time range used to filter orders by their modified time.  The start time range is a required field.  The end time range is an optional field, and will \ndefault to the current server time if omitted or if the date supplied is in the future.  The start time range must be before the end time range for a valid query range and \nmust not be more than 7 days from the current date.  The timezone used will be the default aladdin timezone on the server.",
+        "properties": {
+          "endTimeRange": {
+            "$ref": "#/components/schemas/v1TimeRangeParameter"
+          },
+          "startTimeRange": {
+            "$ref": "#/components/schemas/v1TimeRangeParameter"
+          }
+        },
+        "type": "object"
+      },
+      "v1Order": {
+        "description": "An order is a directive from a portfolio manager to the trading desk to execute a particular investment decision.",
+        "properties": {
+          "activeTime": {
+            "description": "Time when the order was activated by trader.",
+            "format": "date-time",
+            "readOnly": true,
+            "type": "string"
+          },
+          "assetId": {
+            "title": "Security associated with the order",
+            "type": "string"
+          },
+          "assetReference": {
+            "$ref": "#/components/schemas/v1OrderAssetReference"
+          },
+          "assignToRule": {
+            "readOnly": true,
+            "title": "Assign to rule",
+            "type": "string"
+          },
+          "assignedTo": {
+            "title": "Assigned to initials",
+            "type": "string"
+          },
+          "assignedToStatus": {
+            "$ref": "#/components/schemas/enumsAssignedToStatus"
+          },
+          "authorizeTime": {
+            "description": "Time when the order was authorized. Note regarding the PM/Trader split model: The PM authorizes the order which populates the AUTH_TIME on the PM order.\nFrom the authorized PM order, the trader order is created. The trader does not authorize the trader order; rather, the trader order inherits the AUTH_TIME from the PM order.\nOne may see the situation of having the authorizeTime before the entryTime on the trader orders where the order is authorized before it was created.",
+            "format": "date-time",
+            "readOnly": true,
+            "type": "string"
+          },
+          "averagePrice": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Average price",
+            "type": "number"
+          },
+          "basketId": {
+            "description": "Users may provide a Basket ID to mark orders that are related to each other. For example, if ten orders are raised for ten securities which are part of a basket trade\nor program trade or any other type of multi-order trade, the same free-form Basket ID text can be specified across all of these orders for the purpose of tagging.\nThe Basket ID is entered into Aladdin as is and is visible in the \"Basket\" column in Order Monitor of Aladdin Dashboard. A limit of 64 characters is applied. Values over the limit will be truncated.",
+            "type": "string"
+          },
+          "convexity": {
+            "format": "double",
+            "title": "Convexity",
+            "type": "number"
+          },
+          "counterpartyId": {
+            "description": "Numerical ID associated with the counterparty. This can be retrieved using the Brokers API.",
+            "type": "string"
+          },
+          "dealId": {
+            "description": "Deal ID is a freeform string that is used to link two orders together. See deal type for further information. \nWhen used as a request input, assign the orders by specifying the same string value to connect all the related orders.\nThis ID will be reassigned with a system-wide unique identifier after the orders are posted, and is returned in this field in the order response.",
+            "type": "string"
+          },
+          "dealType": {
+            "description": "Deal type is the order relationship type. Valid values are: SWAP, SWITCH, PACKAGE, CSWAP, ROLL, SPREAD, RND_ROBIN, COVERED_OPT.\nUse this field in conjunction with deal ID to establish a relationship between two orders.",
+            "type": "string"
+          },
+          "dealingCapacity": {
+            "description": "Dealing capacity. Examples: \"Agency Basis\", \"Principal Basis\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "directedBrokerAccount": {
+            "title": "Directed broker account",
+            "type": "string"
+          },
+          "directedCounterparty": {
+            "title": "Directed counterparty",
+            "type": "string"
+          },
+          "duration": {
+            "format": "double",
+            "title": "Duration",
+            "type": "number"
+          },
+          "entryTime": {
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Entry Timestamp",
+            "type": "string"
+          },
+          "executionInstruction": {
+            "description": "Execution instrutions. Examples: \"All or None\", \"Do not Increase\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "expirationDate": {
+            "format": "date",
+            "title": "Expiration date",
+            "type": "string"
+          },
+          "expirationType": {
+            "description": "Expiration type. Examples: \"Day\", \"Good Till Cancel\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "externalCounterpartyId": {
+            "description": "The client-provided non-Aladdin identifier of the executing broker. This is an input-only field that may be used in place of the counterpartyId to select the counterparty via an external account code.",
+            "type": "string"
+          },
+          "externalOrderReference": {
+            "$ref": "#/components/schemas/order_managementorderv1ExternalOrderReference"
+          },
+          "face": {
+            "format": "double",
+            "title": "The total quantity of the order across all portfolio allocations",
+            "type": "number"
+          },
+          "factor": {
+            "description": "Factor of the security for the given factor date. For floating rate securities that do not pay down, the factor will always be set to 1.",
+            "format": "double",
+            "readOnly": true,
+            "type": "number"
+          },
+          "factorDate": {
+            "description": "The effective date of the factor.",
+            "format": "date",
+            "readOnly": true,
+            "type": "string"
+          },
+          "fillAmount": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Amount filled and booked for this order",
+            "type": "number"
+          },
+          "financingType": {
+            "$ref": "#/components/schemas/commonenumsFinancingType"
+          },
+          "flags": {
+            "items": {
+              "$ref": "#/components/schemas/orderv1OrderFlag"
+            },
+            "title": "Order Flags. Please refer to BQL ord_flags. When updating an existing order with a non-empty list of flags, any existing order flags will be replaced by the new list of flags. To remove all flags from an order, set the list to an empty object: {}",
+            "type": "array"
+          },
+          "id": {
+            "title": "Aladdin order number. Request treated as an update when order number is specified",
+            "type": "string"
+          },
+          "interest": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Interest Value",
+            "type": "number"
+          },
+          "internalUniqueKey": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "An internal unique key used for mapping between Orders (e.g. in merge, split or order-rel workflows)",
+            "type": "integer"
+          },
+          "marketPrice": {
+            "format": "double",
+            "title": "Market price of the security",
+            "type": "number"
+          },
+          "marketYield": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Yield (market convention)",
+            "type": "number"
+          },
+          "mergedDestination": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "if a merged order, merged into order num",
+            "type": "integer"
+          },
+          "modifier": {
+            "readOnly": true,
+            "title": "Modified by",
+            "type": "string"
+          },
+          "modifyTime": {
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Modified time",
+            "type": "string"
+          },
+          "orderComments": {
+            "description": "Comments on the order.",
+            "items": {
+              "$ref": "#/components/schemas/order_managementorderv1OrderComment"
+            },
+            "type": "array"
+          },
+          "orderCustomFields": {
+            "description": "UDFs on the order. A limit of 20 UDFs is applied.",
+            "items": {
+              "$ref": "#/components/schemas/v1OrderCustomField"
+            },
+            "type": "array"
+          },
+          "orderDate": {
+            "format": "date",
+            "title": "Open date for the order",
+            "type": "string"
+          },
+          "orderDetails": {
+            "items": {
+              "$ref": "#/components/schemas/v1OrderDetail"
+            },
+            "title": "List of order details associated with this order",
+            "type": "array"
+          },
+          "orderSource": {
+            "description": "Source of the modification to the order, this can be a user ID or a system like TRADES.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "orderStatus": {
+            "description": "Aladdin order status. Examples: \"Open\", \"Compl Pending\", \"Authorized\", \"Active\", \"Expired\", \"Rejected\", \"Canceled\", \"Booked\". Contact Aladdin Support for full list of accepted values.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "orderType": {
+            "description": "Order type. Examples: \"Market\", \"Limit\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "ownerType": {
+            "$ref": "#/components/schemas/commonenumsOwnerType"
+          },
+          "pmInitials": {
+            "description": "Portfolio manager initials.",
+            "type": "string"
+          },
+          "pmInstruction": {
+            "description": "Update instructions for the order. Examples: \"100% Complete\", \"Approved\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "principal": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Principal",
+            "type": "number"
+          },
+          "raiser": {
+            "title": "Created by",
+            "type": "string"
+          },
+          "referenceAssetId": {
+            "title": "Collateral security identifier",
+            "type": "string"
+          },
+          "referenceHaircut": {
+            "format": "double",
+            "title": "Repo haircut (percentage)",
+            "type": "number"
+          },
+          "referencePrice": {
+            "format": "double",
+            "title": "Collateral security price",
+            "type": "number"
+          },
+          "relationships": {
+            "items": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "readOnly": true,
+            "title": "Order Relationships (currently not supported)",
+            "type": "array"
+          },
+          "settleCurrencyCode": {
+            "title": "Currency associated with the price",
+            "type": "string"
+          },
+          "settleDate": {
+            "format": "date",
+            "title": "Settlement date for the order",
+            "type": "string"
+          },
+          "settleDateOffset": {
+            "format": "int32",
+            "title": "Settlement date offset",
+            "type": "integer"
+          },
+          "softDollarFlag": {
+            "description": "Soft dollar designation flag. \"Y\" designates order to soft dollar account.",
+            "readOnly": true,
+            "type": "boolean"
+          },
+          "splitSource": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "if a split order, split from order num",
+            "type": "integer"
+          },
+          "touchCount": {
+            "description": "This number will be incremented every time the order is touched.",
+            "format": "int32",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "tradeDate": {
+            "format": "date",
+            "title": "Trade date for the order",
+            "type": "string"
+          },
+          "tradePurpose": {
+            "description": "Trade purpose. Examples: \"Origination\", \"Arbitrage\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "traderFolder": {
+            "description": "Grouping identifier for traders.",
+            "type": "string"
+          },
+          "traderInitials": {
+            "title": "Trader initials",
+            "type": "string"
+          },
+          "tradingBenchmark": {
+            "description": "Trading benchmark. Examples: \"Market\", \"Best Effort\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "tradingBenchmarkDate": {
+            "format": "date",
+            "title": "Trading benchmark date",
+            "type": "string"
+          },
+          "tradingBenchmarkPrice": {
+            "format": "double",
+            "title": "Trading benchmark price",
+            "type": "number"
+          },
+          "tradingLimitType": {
+            "description": "Limit type of the order. Examples: \"Price\", \"Yield\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "tradingLimitValue": {
+            "format": "double",
+            "title": "Limit value",
+            "type": "number"
+          },
+          "tradingStopType": {
+            "description": "Limit stop type of the order. Examples: \"Price\", \"Yield\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "tradingStopValue": {
+            "format": "double",
+            "title": "Stop value",
+            "type": "number"
+          },
+          "transactionType": {
+            "description": "Transaction type of the order. Examples: \"BUY\", \"SELL\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "unitType": {
+            "description": "The Unit type of the order Examples: \"VALUE\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "urgency": {
+            "description": "Urgency of the order. Examples: \"1\", \"2\". Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "version": {
+            "description": "Version number. Each time the order is updated, the version may or may not increment based on business rules, but the touch count will increment.",
+            "format": "int32",
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "v1OrderAssetReference": {
+        "properties": {
+          "ccyPair": {
+            "description": "Currency Pair. An input-only field for resolving FX securities with. Both formats are supported: \"USD/EUR\", \"USDEUR\".",
+            "type": "string"
+          },
+          "cins": {
+            "title": "CINS Identifier",
+            "type": "string"
+          },
+          "clientIdReference": {
+            "$ref": "#/components/schemas/v1ClientIdReference"
+          },
+          "isin": {
+            "title": "ISIN Identifier",
+            "type": "string"
+          },
+          "localId": {
+            "title": "Local ID (only the China local ID is currently supported)",
+            "type": "string"
+          },
+          "ric": {
+            "title": "Reuters Instrument Code",
+            "type": "string"
+          },
+          "sedol": {
+            "title": "SEDOL Identifier",
+            "type": "string"
+          },
+          "snpCusip": {
+            "title": "CUSIP Identifier",
+            "type": "string"
+          }
+        },
+        "title": "Asset References",
+        "type": "object"
+      },
+      "v1OrderCustomField": {
+        "properties": {
+          "customFieldLabel": {
+            "description": "Custom field name. Contact Aladdin Support for full list of accepted values.",
+            "type": "string"
+          },
+          "customFieldType": {
+            "readOnly": true,
+            "title": "Custom field type",
+            "type": "string"
+          },
+          "customFieldValue": {
+            "description": "Custom field value. A limit of 64 characters is applied.",
+            "type": "string"
+          },
+          "customIndex": {
+            "readOnly": true,
+            "title": "Custom field custom index",
+            "type": "string"
+          }
+        },
+        "title": "Order Custom Field (UDF)",
+        "type": "object"
+      },
+      "v1OrderDetail": {
+        "properties": {
+          "centralClearingParty": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "Central Clearing Party",
+            "type": "integer"
+          },
+          "clearingCounterpartyId": {
+            "readOnly": true,
+            "title": "External counterparty identifier",
+            "type": "string"
+          },
+          "externalPortfolioId": {
+            "description": "External identifier/account for the portfolio of this order detail. This may be used in place of the portfolioReference. Users must also specify the accountCode and externalEntityType in the postOrderConfig when used in order posting.",
+            "type": "string"
+          },
+          "modifier": {
+            "readOnly": true,
+            "title": "Modified by",
+            "type": "string"
+          },
+          "modifyTime": {
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Modified Time",
+            "type": "string"
+          },
+          "orderDetailId": {
+            "description": "Unique identifier for the portfolio allocation.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "originalOrderDetailId": {
+            "description": "Original order detail ID record before mergers or splits.",
+            "format": "int32",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "originalOrderNumber": {
+            "description": "Original order ID before mergers or splits.",
+            "format": "int32",
+            "readOnly": true,
+            "type": "integer"
+          },
+          "portfolioReference": {
+            "$ref": "#/components/schemas/referencesportfolioPortfolioReference"
+          },
+          "quantity": {
+            "format": "double",
+            "title": "Quantity",
+            "type": "number"
+          },
+          "quantityBooked": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Quantity Booked",
+            "type": "number"
+          },
+          "referenceFace": {
+            "format": "double",
+            "title": "Collateral security quantity",
+            "type": "number"
+          },
+          "referenceFillAmount": {
+            "format": "double",
+            "readOnly": true,
+            "title": "Collateral security fill amount",
+            "type": "number"
+          },
+          "requestStatus": {
+            "$ref": "#/components/schemas/enumsAssignedToStatus"
+          },
+          "reservations": {
+            "items": {
+              "$ref": "#/components/schemas/v1OrderReservation"
+            },
+            "title": "Order Reservations",
+            "type": "array"
+          },
+          "strategyId": {
+            "format": "int32",
+            "title": "Strategy ID",
+            "type": "integer"
+          },
+          "strategyName": {
+            "title": "Strategy Name",
+            "type": "string"
+          },
+          "version": {
+            "description": "Version number. Each time the order detail is updated, the version may or may not increment based on business rules, but the touch count will increment.",
+            "format": "int32",
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "title": "Order detail",
+        "type": "object"
+      },
+      "v1OrderIdQuery": {
+        "properties": {
+          "basketIdCriterion": {
+            "$ref": "#/components/schemas/orderv1BasketIdCriterion"
+          },
+          "portfolioGroupCriterion": {
+            "$ref": "#/components/schemas/v1PortfolioGroupCriterion"
+          }
+        },
+        "title": "Query to filter order identifiers on",
+        "type": "object"
+      },
+      "v1OrderIdsCriterion": {
+        "properties": {
+          "ids": {
+            "description": "Aladdin unique order numbers. Maps to Order.id field. At least one order ID must be specified. Maximum allowed is 30,000.",
+            "items": {
+              "type": "string"
+            },
+            "required": [
+              "ids"
+            ],
+            "type": "array"
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "title": "A criterion to filter by order numbers/IDs",
+        "type": "object"
+      },
+      "v1OrderReservation": {
+        "properties": {
+          "approvalId": {
+            "title": "Approval ID - externally assigned identifier for external OrderReservation Requests",
+            "type": "string"
+          },
+          "expiryTime": {
+            "format": "date-time",
+            "title": "Expiry time",
+            "type": "string"
+          },
+          "modifier": {
+            "readOnly": true,
+            "title": "Modified by",
+            "type": "string"
+          },
+          "modifyTime": {
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Modified time",
+            "type": "string"
+          },
+          "orderReservationId": {
+            "$ref": "#/components/schemas/v1OrderReservationID"
+          },
+          "orderReservationRate": {
+            "format": "double",
+            "title": "Rate for the security's order reservation",
+            "type": "number"
+          },
+          "orderReservationStatus": {
+            "$ref": "#/components/schemas/enumsOrderReservationStatus"
+          },
+          "orderReservationType": {
+            "$ref": "#/components/schemas/enumsOrderReservationType"
+          },
+          "quantity": {
+            "format": "double",
+            "title": "Quantity",
+            "type": "number"
+          },
+          "requestedTime": {
+            "format": "date-time",
+            "readOnly": true,
+            "title": "Requested time",
+            "type": "string"
+          },
+          "requestor": {
+            "readOnly": true,
+            "title": "Requested By",
+            "type": "string"
+          },
+          "revision": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "statusMessage": {
+            "readOnly": true,
+            "title": "Status message",
+            "type": "string"
+          },
+          "tradingFcm": {
+            "format": "int32",
+            "readOnly": true,
+            "title": "Trading Futures Clearing Merchant",
+            "type": "integer"
+          }
+        },
+        "title": "Order Reservation",
+        "type": "object"
+      },
+      "v1OrderReservationID": {
+        "properties": {
+          "orderDetailId": {
+            "format": "int32",
+            "title": "Order Detail Id",
+            "type": "integer"
+          },
+          "reservationDate": {
+            "format": "date",
+            "title": "Reservation Date",
+            "type": "string"
+          },
+          "source": {
+            "format": "int32",
+            "title": "Order Source",
+            "type": "integer"
+          }
+        },
+        "title": "Order Reservation ID",
+        "type": "object"
+      },
+      "v1PortfolioAndOrderStatusFilterOption": {
+        "description": "Option to filter order by specifying the portfolio and order status.",
+        "properties": {
+          "orderStatuses": {
+            "description": "Specify a list of Aladdin order statuses to filter orders by.\nNote only live order statuses are currently supported: “Open”, “Compl Pending”, “Authorized”, and “Active”.\nIf no status is specified, all live orders will be included in the response. Both CDE and DECDE values are accepted as well.\nPlease reference the Aladdin Decode table ‘ORDER_STATUS’ for the list of all order statuses (live and completed) in Aladdin.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "portfolioIds": {
+            "description": "The numerical ID associated with a portfolio. This can be retrieved using the Portfolios API.\nAt least one portfolio must be specified. The maximum allowed is 20.",
+            "items": {
+              "type": "string"
+            },
+            "required": [
+              "portfolio_ids"
+            ],
+            "type": "array"
+          }
+        },
+        "required": [
+          "portfolioIds"
+        ],
+        "type": "object"
+      },
+      "v1PortfolioGroupCriterion": {
+        "description": "A criterion to filter live orders by portfolio / portfolio groups, and optionally by order statuses and asset IDs\nPlease note that orders not in a live status or older than 365 days, will not be returned.",
+        "properties": {
+          "assetIds": {
+            "description": "List of asset IDs to query orders for. If not specified, this query will search for all orders raised for any assets matching the portfolios and statuses in this criterion.\nEmpty strings or spaces are ignored.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "orderStatuses": {
+            "description": "Specify a list of Aladdin order statuses to filter orders by.\nNote only live order statuses are currently supported: \"Open\", \"Compl Pending\", \"Authorized\", and \"Active\".\nIf no status is specified, all live orders will be included in the response. Both CDE and DECDE values are accepted as well.\nPlease reference the Aladdin Decode table 'ORDER_STATUS' for the list of all order statuses (live and completed) in Aladdin.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "portfolioGroupTicker": {
+            "description": "The portfolio (fund) or portfolio group ticker to filter by. If a portfolio group is specified, the maximum number of expanded portfolios allowed is 5000. An error will be returned if this limit is exceeded.\nThis is a required field.",
+            "required": [
+              "portfolio_group_ticker"
+            ],
+            "type": "string"
+          },
+          "showTraderOrders": {
+            "description": "True to show trader orders. Otherwise, PM orders are shown by default. Note that hybrid orders are always returned (i.e. without the owner type assignment).",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "portfolioGroupTicker"
+        ],
+        "type": "object"
+      },
+      "v1PortfolioModifiedTimeCriterion": {
+        "description": "A criterion used to filter orders by a portoflio / portfolio group and modified date range.",
+        "properties": {
+          "modifiedTimeRange": {
+            "$ref": "#/components/schemas/v1ModifiedTimeRange"
+          },
+          "portfolioGroupTicker": {
+            "description": "The portfolio (fund) or portfolio group ticker to filter by. If a portfolio group is specified, the maximum number of expanded portfolios allowed is 5000. An error will be returned if this limit is exceeded.",
+            "type": "string"
+          },
+          "portfolioId": {
+            "description": "The numerical ID associated with a portfolio. This can be retrieved using the Portfolios API.",
+            "type": "string"
+          },
+          "showTraderOrders": {
+            "description": "True to show trader orders. Otherwise, PM orders are shown by default. Note that hybrid orders are always returned (i.e. without the owner type assignment).",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "v1PostOrderRequest": {
+        "description": "Request message to create and/or update a single Aladdin order.",
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/v1Order"
+          },
+          "postOrderConfig": {
+            "$ref": "#/components/schemas/order_managementorderv1PostOrderConfig"
+          }
+        },
+        "type": "object"
+      },
+      "v1PostOrderResponse": {
+        "description": "Response message to posting an order.",
+        "properties": {
+          "complianceViolations": {
+            "description": "Compliance violations triggered by posting this order.",
+            "items": {
+              "$ref": "#/components/schemas/compliancestateviolationv1Violation"
+            },
+            "type": "array"
+          },
+          "order": {
+            "$ref": "#/components/schemas/v1Order"
+          }
+        },
+        "type": "object"
+      },
+      "v1PostOrderResult": {
+        "description": "Result of posting an order as part of a batch operation.",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/googlerpcStatus"
+          },
+          "output": {
+            "$ref": "#/components/schemas/v1PostOrderResponse"
+          }
+        },
+        "type": "object"
+      },
+      "v1SinglePostOrderResponse": {
+        "description": "Response to single post order request.",
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/v1PostOrderResult"
+            },
+            "title": "Order results",
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "v1TimeRangeParameter": {
+        "description": "A date, hour, and minute used as a query parameter when filtering orders by modified time.  The timezone used will be the default aladdin timezone on the server.",
+        "properties": {
+          "filterDate": {
+            "description": "The date to filter by.",
+            "format": "date",
+            "required": [
+              "filter_date"
+            ],
+            "type": "string"
+          },
+          "hour": {
+            "description": "The hour to filter by, 0 - 23 inclusive.  When omitted, the default value is 0.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "minute": {
+            "description": "The minute to filter by, 0 - 59 inclusive.  When omitted, the default value is 0.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "filterDate"
+        ],
+        "type": "object"
+      },
+      "v1ViolationContribution": {
+        "description": "Violation Contribution describes one or more allocations which contributed to the violation. Each violation is caused by one or more underlying positions.",
+        "properties": {
+          "allocationId": {
+            "description": "The id of the allocation.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "allocationQuantity": {
+            "description": "Size of the allocation, dependent on the asset class of the security. e.g. in the case of equities, this will be the number of shares. Sign indicates the direction of the transaction.",
+            "format": "double",
+            "type": "number"
+          },
+          "assetId": {
+            "description": "Aladdin Security Identifier.",
+            "type": "string"
+          },
+          "compliancePositionSource": {
+            "$ref": "#/components/schemas/enumsCompliancePositionSource"
+          },
+          "portfolioId": {
+            "description": "Aladdin unique numeric portfolio id, e.g. -1123.",
+            "type": "string"
+          },
+          "transactionDate": {
+            "description": "The date on which the transaction took place.",
+            "format": "date",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}

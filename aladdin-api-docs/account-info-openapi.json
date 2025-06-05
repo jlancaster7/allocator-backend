@@ -1,0 +1,560 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "API contains operations on Account Info resource.",
+    "title": "Account Info",
+    "version": "1.0.0",
+    "x-aladdin-api-id": "agraph.investment_operations.reference_data.account_info.AccountInfoAPI",
+    "x-aladdin-api-stability": "stable",
+    "x-aladdin-spec-id": "agraph.investment_operations.reference_data.account_info.v1.AccountInfoAPI"
+  },
+  "paths": {
+    "/accountInfos:filter": {
+      "post": {
+        "description": "Filters account info basis list of account codes or other custom filter criterias.",
+        "operationId": "AccountInfoAPI_FilterAccountInfos",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1FilterAccountInfosRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1FilterAccountInfosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Filter Account Info",
+        "x-quota-limit": 100
+      }
+    },
+    "/accountInfos:search": {
+      "get": {
+        "description": "Searches Account Info based on the input query.",
+        "operationId": "AccountInfoAPI_SearchAccountInfos",
+        "parameters": [
+          {
+            "description": "A unique identifier for this request.",
+            "in": "header",
+            "name": "VND.com.blackrock.Request-ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          {
+            "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+            "in": "header",
+            "name": "VND.com.blackrock.Origin-Timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "description": "Search string. Represents Search string (atleast two characters).",
+            "in": "query",
+            "name": "search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Account Info Search Type. Represents search type.\n\n - ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED: The API will default to the ACCOUNT_NAME type\n - ACCOUNT_INFO_SEARCH_TYPE_ACCOUNT_NAME: This is the default value\nFields searched - accountName.",
+            "in": "query",
+            "name": "acctInfoSearchType",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED",
+                "ACCOUNT_INFO_SEARCH_TYPE_ACCOUNT_NAME"
+              ],
+              "default": "ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED"
+            }
+          },
+          {
+            "description": "The maximum value is 100; values above 100 will be coerced to 100\nIf unspecified, the default value to return is 100\nThe maximum number of Brokers to return (Pagination is not supported currently).",
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "description": "A page token, received from a previous call (Pagination is not supported currently).",
+            "in": "query",
+            "name": "pageToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1SearchAccountInfosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "summary": "Search Account Info",
+        "x-quota-limit": 100
+      }
+    }
+  },
+  "x-access-level": "Public",
+  "servers": [
+    {
+      "url": "https://lmginv.blackrock.com/api/investment-operations/reference-data/account-info/v1"
+    }
+  ],
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Aladdin® will not process the request due to an apparent client error.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Aladdin® understood the request but is refusing to authorize it.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Aladdin® is refusing to process the request because the client has exceeded the rate limit.",
+        "headers": {
+          "VND.com.blackrock.Request-ID": {
+            "description": "The unique identifier assigned by the client to the request that originated this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-ID": {
+            "description": "A Unique Identifier for this response.",
+            "schema": {
+              "type": "string",
+              "format": "UUID"
+            }
+          },
+          "VND.com.blackrock.Response-Timestamp": {
+            "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Defines an error that occurred.",
+              "properties": {
+                "code": {
+                  "description": "A short mnemonic reference code for the error.",
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                "message": {
+                  "description": "A human readable description of the error.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Any": {
+        "description": "`Any` contains an arbitrary serialized message along with a\nURL that describes the type of the serialized message",
+        "properties": {
+          "@type": {
+            "description": "A URL/resource name that uniquely identifies the type of the serialized message.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "googlerpcStatus": {
+        "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors).",
+        "properties": {
+          "code": {
+            "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].",
+            "format": "int32",
+            "type": "integer"
+          },
+          "details": {
+            "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use.",
+            "items": {
+              "$ref": "#/components/schemas/Any"
+            },
+            "type": "array"
+          },
+          "message": {
+            "description": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\n[google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1AccountInfo": {
+        "description": "AccountInfo describes the account type of an organization.",
+        "properties": {
+          "fullName": {
+            "description": "Full name of the account.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Resources must have a 'id' field.\nName describes the computer or human assigned resource identifier.\nAccount code.",
+            "type": "string"
+          },
+          "shortName": {
+            "description": "Short name of the account.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1AccountInfoQuery": {
+        "description": "The query required to perform a filter query.",
+        "properties": {
+          "ids": {
+            "description": "Account codes for which account info data is to be retrieved.",
+            "items": {
+              "type": "string"
+            },
+            "title": "List of account codes",
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "v1AccountInfoSearchType": {
+        "default": "ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED",
+        "description": "Represents type of search being performed.\n\n - ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED: The API will default to the ACCOUNT_NAME type\n - ACCOUNT_INFO_SEARCH_TYPE_ACCOUNT_NAME: This is the default value\nFields searched - accountName.",
+        "enum": [
+          "ACCOUNT_INFO_SEARCH_TYPE_UNSPECIFIED",
+          "ACCOUNT_INFO_SEARCH_TYPE_ACCOUNT_NAME"
+        ],
+        "type": "string"
+      },
+      "v1FilterAccountInfosRequest": {
+        "description": "The request message for AccountInfoAPI.FilterAccountInfosRequest.",
+        "properties": {
+          "pageSize": {
+            "description": "The maximum number of account Infos to return. The service may\nreturn fewer than this value. If unspecified i.e 0, then complete list of\naccount Infos will be returned.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "pageToken": {
+            "description": "A page token, received from a previous 'FilterAccountInfos' call.\nProvide this to retrieve the subsequent page.\n\nWhen paginating, all other parameters provided to\n'FilterAccountInfos' must match the call that provided the page\ntoken.",
+            "type": "string"
+          },
+          "query": {
+            "$ref": "#/components/schemas/v1AccountInfoQuery"
+          }
+        },
+        "type": "object"
+      },
+      "v1FilterAccountInfosResponse": {
+        "description": "The response message for AccountInfoAPI.FilterAccountInfos.",
+        "properties": {
+          "accountInfos": {
+            "description": "Account Infos to be returned.",
+            "items": {
+              "$ref": "#/components/schemas/v1AccountInfo"
+            },
+            "title": "Account Infos",
+            "type": "array"
+          },
+          "nextPageToken": {
+            "description": "A token, which can be sent as 'page_token' to retrieve the next page.\nIf this field is omitted, there are no subsequent pages.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1SearchAccountInfosResponse": {
+        "description": "The response message for AccountInfoAPI.SearchAccountInfos.",
+        "properties": {
+          "accountInfos": {
+            "description": "Account Infos to be returned.",
+            "items": {
+              "$ref": "#/components/schemas/v1AccountInfo"
+            },
+            "title": "Account Infos",
+            "type": "array"
+          },
+          "nextPageToken": {
+            "description": "A token, which can be sent as 'page_token' to retrieve the next page(Pagination is not supported currently).",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}

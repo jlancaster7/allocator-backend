@@ -1,0 +1,667 @@
+# Order Allocation System API Schema Contract
+# OpenAPI 3.0 Specification
+
+openapi: 3.0.0
+info:
+  title: Order Allocation System API
+  version: 1.0.0
+  description: API for order allocation system integrating with BlackRock Aladdin
+
+servers:
+  - url: https://api.allocation-system.com/v1
+    description: Production server
+  - url: http://localhost:5000/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /portfolio-groups:
+    get:
+      summary: Get all portfolio groups
+      tags: [Portfolios]
+      responses:
+        200:
+          description: List of portfolio groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioGroupsResponse'
+
+  /securities/search:
+    get:
+      summary: Search securities
+      tags: [Securities]
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: CUSIP or ticker to search
+      responses:
+        200:
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecuritySearchResponse'
+
+  /allocations/preview:
+    post:
+      summary: Calculate allocation preview
+      tags: [Allocations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AllocationRequest'
+      responses:
+        200:
+          description: Allocation preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationPreviewResponse'
+
+  /allocations/{allocation_id}/commit:
+    post:
+      summary: Commit allocation
+      tags: [Allocations]
+      parameters:
+        - name: allocation_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitAllocationRequest'
+      responses:
+        200:
+          description: Commit successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommitAllocationResponse'
+
+  /orders/{order_id}:
+    put:
+      summary: Modify order
+      tags: [Orders]
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyOrderRequest'
+      responses:
+        200:
+          description: Order modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifyOrderResponse'
+
+    delete:
+      summary: Cancel order
+      tags: [Orders]
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderRequest'
+      responses:
+        200:
+          description: Order cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelOrderResponse'
+
+  /positions/{account_id}:
+    get:
+      summary: Get account positions
+      tags: [Market Data]
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: as_of
+          in: query
+          schema:
+            type: string
+            enum: [EOD, SOD, SOD+Trades]
+            default: SOD
+      responses:
+        200:
+          description: Account positions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PositionsResponse'
+
+  /cash/{account_id}:
+    get:
+      summary: Get account cash positions
+      tags: [Market Data]
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Cash positions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Authentication Schemas
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+
+    # Portfolio Schemas
+    PortfolioGroupsResponse:
+      type: object
+      properties:
+        portfolio_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortfolioGroup'
+
+    PortfolioGroup:
+      type: object
+      properties:
+        group_id:
+          type: string
+        group_name:
+          type: string
+        account_count:
+          type: integer
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+
+    Account:
+      type: object
+      properties:
+        account_id:
+          type: string
+        account_name:
+          type: string
+
+    # Security Schemas
+    SecuritySearchResponse:
+      type: object
+      properties:
+        securities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Security'
+
+    Security:
+      type: object
+      properties:
+        cusip:
+          type: string
+        ticker:
+          type: string
+        description:
+          type: string
+        coupon:
+          type: number
+          format: float
+        maturity:
+          type: string
+          format: date
+        duration:
+          type: number
+          format: float
+        oas:
+          type: number
+          format: float
+        min_denomination:
+          type: number
+          format: float
+
+    # Allocation Schemas
+    AllocationRequest:
+      type: object
+      required: [order, allocation_method, portfolio_groups]
+      properties:
+        order:
+          $ref: '#/components/schemas/OrderDetails'
+        allocation_method:
+          type: string
+          enum: [PRO_RATA, CUSTOM_WEIGHTS, MIN_DISPERSION]
+        portfolio_groups:
+          type: array
+          items:
+            type: string
+        parameters:
+          oneOf:
+            - $ref: '#/components/schemas/ProRataParameters'
+            - $ref: '#/components/schemas/CustomWeightsParameters'
+            - $ref: '#/components/schemas/MinDispersionParameters'
+        constraints:
+          $ref: '#/components/schemas/AllocationConstraints'
+
+    OrderDetails:
+      type: object
+      required: [security_id, side, quantity]
+      properties:
+        security_id:
+          type: string
+        side:
+          type: string
+          enum: [BUY, SELL]
+        quantity:
+          type: number
+          format: float
+        settlement_date:
+          type: string
+          format: date
+        price:
+          type: number
+          format: float
+          description: Optional override price
+
+    ProRataParameters:
+      type: object
+      properties:
+        base_metric:
+          type: string
+          enum: [NAV, MARKET_VALUE, CUSTOM]
+          default: NAV
+
+    CustomWeightsParameters:
+      type: object
+      required: [weights]
+      properties:
+        weights:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+
+    MinDispersionParameters:
+      type: object
+      properties:
+        target_metric:
+          type: string
+          enum: [ACTIVE_SPREAD_DURATION, DURATION, OAS]
+          default: ACTIVE_SPREAD_DURATION
+        tolerance:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          default: 0.05
+        max_iterations:
+          type: integer
+          default: 1000
+
+    AllocationConstraints:
+      type: object
+      properties:
+        respect_cash:
+          type: boolean
+          default: true
+        min_allocation:
+          type: number
+          format: float
+          default: 1000
+        compliance_check:
+          type: boolean
+          default: true
+        round_to_denomination:
+          type: boolean
+          default: true
+
+    AllocationPreviewResponse:
+      type: object
+      properties:
+        allocation_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        order:
+          $ref: '#/components/schemas/OrderSummary'
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountAllocation'
+        summary:
+          $ref: '#/components/schemas/AllocationSummary'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationWarning'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationError'
+
+    OrderSummary:
+      type: object
+      properties:
+        security_id:
+          type: string
+        side:
+          type: string
+        total_quantity:
+          type: number
+          format: float
+        settlement_date:
+          type: string
+          format: date
+
+    AccountAllocation:
+      type: object
+      properties:
+        account_id:
+          type: string
+        account_name:
+          type: string
+        allocated_quantity:
+          type: number
+          format: float
+        allocated_notional:
+          type: number
+          format: float
+        available_cash:
+          type: number
+          format: float
+        post_trade_cash:
+          type: number
+          format: float
+        pre_trade_metrics:
+          $ref: '#/components/schemas/TradeMetrics'
+        post_trade_metrics:
+          $ref: '#/components/schemas/TradeMetrics'
+
+    TradeMetrics:
+      type: object
+      properties:
+        active_spread_duration:
+          type: number
+          format: float
+        contribution_to_duration:
+          type: number
+          format: float
+        duration:
+          type: number
+          format: float
+        oas:
+          type: number
+          format: float
+
+    AllocationSummary:
+      type: object
+      properties:
+        total_allocated:
+          type: number
+          format: float
+        unallocated:
+          type: number
+          format: float
+        allocation_rate:
+          type: number
+          format: float
+        accounts_allocated:
+          type: integer
+        accounts_skipped:
+          type: integer
+        dispersion_metrics:
+          $ref: '#/components/schemas/DispersionMetrics'
+
+    DispersionMetrics:
+      type: object
+      properties:
+        pre_trade_std_dev:
+          type: number
+          format: float
+        post_trade_std_dev:
+          type: number
+          format: float
+        improvement:
+          type: number
+          format: float
+        max_deviation:
+          type: number
+          format: float
+        min_deviation:
+          type: number
+          format: float
+
+    AllocationWarning:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [INSUFFICIENT_CASH, MIN_LOT_SIZE, COMPLIANCE, ROUNDING]
+        account_id:
+          type: string
+        message:
+          type: string
+
+    AllocationError:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+    # Commit Schemas
+    CommitAllocationRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+        override_warnings:
+          type: boolean
+          default: false
+
+    CommitAllocationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, FAILED, PARTIAL]
+        aladdin_order_ids:
+          type: array
+          items:
+            type: string
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationResult'
+        audit_id:
+          type: string
+
+    AllocationResult:
+      type: object
+      properties:
+        account_id:
+          type: string
+        aladdin_order_id:
+          type: string
+        status:
+          type: string
+          enum: [SUBMITTED, FAILED]
+        message:
+          type: string
+
+    # Order Management Schemas
+    ModifyOrderRequest:
+      type: object
+      properties:
+        quantity:
+          type: number
+          format: float
+        comment:
+          type: string
+
+    ModifyOrderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        aladdin_order_id:
+          type: string
+        message:
+          type: string
+
+    CancelOrderRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+
+    CancelOrderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        message:
+          type: string
+
+    # Market Data Schemas
+    PositionsResponse:
+      type: object
+      properties:
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Position'
+
+    Position:
+      type: object
+      properties:
+        account_id:
+          type: string
+        cusip:
+          type: string
+        quantity:
+          type: number
+          format: float
+        market_value:
+          type: number
+          format: float
+        duration:
+          type: number
+          format: float
+        spread_duration:
+          type: number
+          format: float
+        oas:
+          type: number
+          format: float
+
+    CashResponse:
+      type: object
+      properties:
+        cash_positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashPosition'
+
+    CashPosition:
+      type: object
+      properties:
+        currency:
+          type: string
+        settled_cash:
+          type: number
+          format: float
+        available_cash:
+          type: number
+          format: float
